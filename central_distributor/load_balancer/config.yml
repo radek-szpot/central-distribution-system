@@ -1,0 +1,5 @@
+# TODO: Please update the config.yml file with the actual network addresses or URLs of your manufacturer endpoints.
+manufacturer_endpoints:
+  - http://manufacturer1.example.com
+  - http://manufacturer2.example.com
+  - http://manufacturer3.example.com
