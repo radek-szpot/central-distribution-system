@@ -1,61 +1,47 @@
 import requests
-import database
 
 manufacturer_endpoints = [
-    "http://manufacturer1.com",
-    "http://manufacturer2.com",
-    # Add more manufacturer endpoints as needed
+    "http://127.0.0.1:5001/",
+    "http://127.0.0.1:5002/",
+    "http://127.0.0.1:5003/",
 ]
 
 
-def fetch_goods_information():
-    goods_information = []
+def fetch_products_information():
+    products_information = []
 
     for endpoint in manufacturer_endpoints:
         try:
-            response = requests.get(f"{endpoint}/goods")
+            response = requests.get(f"{endpoint}/all_products")
             if response.status_code == 200:
-                goods_info = response.json()
-                goods_information.append(goods_info)
+                products_info = response.json()
+                products_information.append(products_info)
             else:
                 print(f"Error accessing goods information from {endpoint}")
         except requests.exceptions.RequestException as e:
             print(f"Error connecting to {endpoint}: {e}")
 
-    return goods_information
+    return products_information
 
-
-# Example usage:
-all_goods_info = fetch_goods_information()
-
-
-# Combine the information from all manufacturers as needed
 
 def handle_customer_request(customer_request):
-    # Handle customer requests and process the purchase
-    # Update the database and notify manufacturers
-
-    # Replace this with your actual implementation
-    # Retrieve the necessary goods information from the database
-    goods_info = database.retrieve_goods_information()
-
-    # Process the customer request
-    # Update the database with the purchased goods
-    # Notify manufacturers about the quantity of goods sold
+    # TODO: Handle customer requests and process the purchase
+    # TODO: Update the database and notify manufacturers
+    # TODO: Process the customer request
+    # TODO: Update the database with the purchased goods
+    # TODO: Notify manufacturers about the quantity of goods sold
+    pass
 
 
 def main():
+    # FIXME: Below is shit from GPT
     # Main entry point of the distributor
     # Start listening for customer requests and handle them
-
     # Replace this with your actual implementation
     while True:
         customer_request = message_broker.receive_customer_request()
         handle_customer_request(customer_request)
 
-
-if __name__ == "__main__":
-    main()
 
 """
 Description: This script represents the distributor module responsible for fetching goods information from each 

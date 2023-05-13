@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style type="text/css">
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            margin-top: 50px;
+            color: #333;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .button-container {
+            margin-bottom: 10px;
+        }
+
+        .button-container form {
+            display: inline-block;
+        }
+
+        .button-container button, .button-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-container button:hover, .button-container a:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .add-to-cart-button {
+            background-color: #2196F3;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <p>Welcome to your dashboard!</p>
+
+    <div class="button-container">
+        <form action="/logout" method="POST" style="display: inline;">
+            <button type="submit">Logout</button>
+        </form>
+        <a href="/modify-account" class="styled-button">Modify Account</a>
+        <a href="/shopping-cart" class="styled-button">Shopping Cart</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Manufacturer</th>
+                <th>Quantity</th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.type }}</td>
+                    <td>{{ product.singular_price }}</td>
+                    <td>{{ product.manufacturer_id }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>
+                        <form action="/add-to-cart/{{ product.id }}" method="POST" style="display: inline;">
+                            <input type="number" name="user_quantity" value="1" min="1">
+                            <button type="submit" class="add-to-cart-button">Add to Cart</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

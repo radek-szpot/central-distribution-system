@@ -1,5 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
-from central_distributor.distributor.database import get_session, Product, Manufacturer
+from central_distributor.database import get_session
+from central_distributor.distributor.models import Product, Manufacturer
+from sqlalchemy import select
 
 
 class ManufacturerCRUD:
@@ -60,11 +62,12 @@ class ManufacturerCRUD:
 
 class ProductCRUD:
     @staticmethod
-    def create_product(manufacturer_id, product_type, quantity, session=None):
+    def create_product(manufacturer_id, product_type, quantity, price, session=None):
         if not session:
             session = get_session()
         try:
-            product = Product(manufacturer_id=manufacturer_id, type=product_type, quantity=quantity)
+            product = Product(manufacturer_id=manufacturer_id, type=product_type, quantity=quantity,
+                              singular_price=price)
             session.add(product)
             session.commit()
         except SQLAlchemyError:
@@ -105,72 +108,6 @@ class ProductCRUD:
             product = session.query(Product).filter_by(id=product_id).first()
             if product:
                 session.delete(product)
-                session.commit()
-        except SQLAlchemyError:
-            session.rollback()
-            raise
-        finally:
-            session.close()
-
-
-class CustomerCRUD:
-    @staticmethod
-    def create_customer(email, password, first_name, last_name, credit_card=None, session=None):
-        if not session:
-            session = get_session()
-        if credit_card:
-            pan_number = credit_card[0]
-            cid_number = credit_card[1]
-        try:
-            customer = Customer(email=email, password=password, first_name=first_name, last_name=last_name,
-                                credit_card=credit_card)
-            session.add(customer)
-            session.commit()
-            return customer
-        except SQLAlchemyError:
-            session.rollback()
-            raise
-        finally:
-            session.close()
-
-    @staticmethod
-    def get_customer(customer_id):
-        session = get_session()
-
-        try:
-            customer = session.query(Customer).filter_by(id=customer_id).first()
-            return customer
-        finally:
-            session.close()
-
-    @staticmethod
-    def get_customer_by_email(email):
-        session = get_session()
-
-        try:
-            customer = session.query(Customer).filter_by(email=email).first()
-            return customer
-        finally:
-            session.close()
-
-    @staticmethod
-    def get_customer_list():
-        session = get_session()
-
-        try:
-            customers = session.query(Customer).all()
-            return customers
-        finally:
-            session.close()
-
-    @staticmethod
-    def delete_customer(customer_id):
-        session = get_session()
-
-        try:
-            customer = session.query(Customer).filter_by(id=customer_id).first()
-            if customer:
-                session.delete(customer)
                 session.commit()
         except SQLAlchemyError:
             session.rollback()

@@ -49,3 +49,12 @@ centralized_distribution_system/
 * * The load_balancer module can benefit from Ray when distributing customer requests to the distributor instances. Ray can be used to manage and distribute the load balancing tasks across the available distributor instances.
 
 By integrating Ray into these modules, you can take advantage of its distributed computing capabilities, such as task parallelism, load balancing, and resource management. It allows you to scale your system, improve performance, and make efficient use of available resources.
+
+
+
+# Problemy:
+- jak customer doda do koszyka towary i da kup to co jak ich nie bedzie ma kupić to co się da 
+(dostać popup i zaznaczyć czy kupić co się da czy wyczyścić koszyk i wrócic do dashboardu)
+- fajnie by bylo dodac jakas metode refresh'a do dashboard'a tak zeby widac bylo jak sie zmienia quantity
+- dodac obsluge wyjatkow w modify account register itp niektore sa ale tak tylko dla pewnosci
+
