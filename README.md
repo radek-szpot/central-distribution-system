@@ -47,4 +47,4 @@ Dodać wyrzucenie towarów niedostępnych wszystkich z danej kategorii i wyświe
 - dodac obsluge wyjatkow w modify account register itp niektore sa ale tak tylko dla pewnosci
 ~~- usuwanie z cart'a~~
 - dodac helpersy ktore beda tworzyc randomowy ruch uzytkownikow np call dodawania do koszyka call kupowania call usuwania
-- dodać weryfikacje czy uztkownik jest zalogowany i czy ma podpieta karte do endpointow
+~~- dodać weryfikacje czy uztkownik jest zalogowany i czy ma podpieta karte do endpointow~~

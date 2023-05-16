@@ -17,6 +17,7 @@
         p {
             margin-bottom: 20px;
             color: #666;
+            font-size: 18px;
         }
 
         .button-container {
@@ -81,8 +82,12 @@
         <form action="/logout" method="POST" style="display: inline;">
             <button type="submit">Logout</button>
         </form>
-        <a href="/modify-account" class="styled-button">Modify Account</a>
-        <a href="/shopping-cart" class="styled-button">Shopping Cart</a>
+        <form action="/modify-account" method="GET" style="display: inline;">
+            <button type="submit">Modify Account</button>
+        </form>
+        <form action="/shopping-cart" method="GET" style="display: inline;">
+            <button type="submit">Shopping Cart</button>
+        </form>
     </div>
 
     <table>

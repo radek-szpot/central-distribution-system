@@ -54,6 +54,19 @@ class CustomerCRUD:
         return customers
 
     @staticmethod
+    def update_customer(customer_id, **kwargs):
+        session = get_session()
+        try:
+            query = update(Customer).where(Customer.id == customer_id).values(**kwargs)
+            session.execute(query)
+            session.commit()
+        except SQLAlchemyError:
+            session.rollback()
+            raise
+        finally:
+            session.close()
+
+    @staticmethod
     def delete_customer(customer_id):
         session = get_session()
         try:
@@ -88,6 +101,16 @@ class PurchaseCRUD:
         return session.query(Purchase).filter(Purchase.id == purchase_id).first()
 
     @staticmethod
+    def get_purchase_all_filters(customer_id: int, product_id: int, session=None):
+        if not session:
+            session = get_session()
+
+        return session.query(Purchase).filter(
+            Purchase.customer_id == customer_id,
+            Purchase.product_id == product_id
+        ).first()
+
+    @staticmethod
     def get_purchases():
         session = get_session()
         try:
@@ -97,19 +120,14 @@ class PurchaseCRUD:
         return purchase
 
     @staticmethod
-    def update_purchase(purchase_id: int, customer_id: int = None, product_id: int = None, quantity: int = None,
-                        session=None):
+    def update_purchase(purchase_id: int, quantity: int = None, session=None):
         if not session:
             session = get_session()
 
         purchase = PurchaseCRUD.get_purchase(purchase_id, session)
         if purchase:
-            if customer_id is not None:
-                purchase.customer_id = customer_id
-            if product_id is not None:
-                purchase.product_id = product_id
             if quantity is not None:
-                purchase.quantity = quantity
+                purchase.quantity += quantity
             session.commit()
             session.refresh(purchase)
         return purchase

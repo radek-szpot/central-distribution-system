@@ -56,6 +56,7 @@ def login():
         customer = CustomerCRUD.get_customer_by_credentials(email, password)
         if customer:
             session['logged_in'] = True
+            print(customer.id)
             session['customer_id'] = customer.id
             return redirect('/dashboard')
 
@@ -72,14 +73,26 @@ def logout():
     return redirect(url_for('customer_blueprint.login'))
 
 
-@customer_blueprint.route('/modify-account')
+@customer_blueprint.route('/modify-account', methods=['GET', 'POST'])
 @redirect_unauthenticated_user
 def modify_account():
     """Modify the customer's account details"""
-    # Retrieve the cart from the session
     if request.method == 'POST':
-        # TODO
+        data = {key: value for key, value in request.form.to_dict().items() if value.strip()}
+        if not data:
+            return render_template('modify_account.html')
+        CustomerCRUD.update_customer(session['customer_id'], **data)
         return redirect('/dashboard')
+    return render_template('modify_account.html')
+
+
+@customer_blueprint.route('/delete-account', methods=['POST'])
+@redirect_unauthenticated_user
+def delete_account():
+    """Delete the customer's account details"""
+    if request.method == 'POST':
+        CustomerCRUD.delete_customer(session['customer_id'])
+        return redirect('/')
     return render_template('modify_account.html')
 
 
@@ -92,22 +105,25 @@ def dashboard():
     # Retrieve the cart from the session
     cart = session.get('cart', [])
     products = ProductCRUD.get_product_list()
-    print(products)
     return render_template('dashboard.html', cart=cart, products=products)
 
 
 @customer_blueprint.route('/shopping-cart')
 @redirect_unauthenticated_user
-def shopping_cart(show_popup=False):
+def shopping_cart(details_popup=False, conflict_popup=False):
     """Display the customer's shopping-cart"""
     # Retrieve the cart from the session
+    if conflict_popup:
+        # todo: remove all items from group where there was a conflict
+        pass
     cart = session.get('cart', [])
     whole_price = 0
     for item in cart:
         price = item["user_quantity"] * item["singular_price"]
         item["price"] = price
         whole_price += price
-    return render_template('cart.html', cart=cart, whole_price=whole_price, show_popup=show_popup)
+    return render_template('cart.html', cart=cart, whole_price=whole_price, details_popup=details_popup,
+                           conflict_popup=False)
 
 
 @customer_blueprint.route('/add-to-cart/<int:product_id>', methods=['POST'])
@@ -147,13 +163,21 @@ def buy():
     cart = session.get('cart', [])
     customer_id = session.get('customer_id')
     customer = CustomerCRUD.get_customer(customer_id)
-    if not (customer.pan_number or customer.cid_number):
-        return shopping_cart(show_popup=True)
     if not cart:
         return redirect('/dashboard')
+    if not (customer.pan_number and customer.cid_number):
+        return shopping_cart(details_popup=True)
 
     for item in cart:
-        PurchaseCRUD.create_purchase(customer_id, item["id"], item["user_quantity"])
-        ProductCRUD.update_product_quantity(item["id"], item["user_quantity"])
+        product = ProductCRUD.get_product(item["id"])
+        if product.remaining_quantity >= item["user_quantity"]:
+            purchase = PurchaseCRUD.get_purchase_all_filters(customer_id, item["id"])
+            if purchase:
+                PurchaseCRUD.update_purchase(purchase.id, item["user_quantity"])
+            else:
+                PurchaseCRUD.create_purchase(customer_id, item["id"], item["user_quantity"])
+            ProductCRUD.update_product_quantity(item["id"], item["user_quantity"])
+        else:
+            return shopping_cart(conflict_popup=True)
     session['cart'] = []
     return redirect('/shopping-cart')
