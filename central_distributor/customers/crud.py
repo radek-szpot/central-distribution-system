@@ -2,7 +2,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from central_distributor.database import get_session
 from central_distributor.customers.models import Customer, Purchase
 from sqlalchemy import select, insert, update
-from sqlalchemy.orm import Session
 
 
 class CustomerCRUD:
@@ -24,8 +23,9 @@ class CustomerCRUD:
         return customer
 
     @staticmethod
-    def get_customer(customer_id):
-        session = get_session()
+    def get_customer(customer_id, session=None):
+        if not session:
+            session = get_session()
 
         try:
             query = select(Customer).filter_by(id=customer_id)
@@ -35,8 +35,9 @@ class CustomerCRUD:
         return customer[0] if customer else None
 
     @staticmethod
-    def get_customer_by_credentials(email, password):
-        session = get_session()
+    def get_customer_by_credentials(email, password, session=None):
+        if not session:
+            session = get_session()
         try:
             query = session.query(Customer).filter_by(email=email, password=password)
             customer = session.execute(query).fetchone()
@@ -45,8 +46,9 @@ class CustomerCRUD:
         return customer[0] if customer else None
 
     @staticmethod
-    def get_customer_list():
-        session = get_session()
+    def get_customer_list(session=None):
+        if not session:
+            session = get_session()
         try:
             customers = session.query(Customer).all()
         finally:
@@ -54,8 +56,9 @@ class CustomerCRUD:
         return customers
 
     @staticmethod
-    def update_customer(customer_id, **kwargs):
-        session = get_session()
+    def update_customer(customer_id, session=None, **kwargs):
+        if not session:
+            session = get_session()
         try:
             query = update(Customer).where(Customer.id == customer_id).values(**kwargs)
             session.execute(query)
@@ -67,8 +70,9 @@ class CustomerCRUD:
             session.close()
 
     @staticmethod
-    def delete_customer(customer_id):
-        session = get_session()
+    def delete_customer(customer_id, session=None):
+        if not session:
+            session = get_session()
         try:
             customer = session.query(Customer).filter_by(id=customer_id).first()
             if customer:

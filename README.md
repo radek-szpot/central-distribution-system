@@ -39,12 +39,12 @@ centralized_distribution_system/
 
 
 # Problemy:
-- jak customer doda do koszyka towary i da kup to co jak ich nie bedzie ma kupić to co się da 
-(dostać popup i zaznaczyć czy kupić co się da czy wyczyścić koszyk i wrócic do dashboardu)
-Dodać wyrzucenie towarów niedostępnych wszystkich z danej kategorii i wyświetlić komunikat
-
+- jak customer doda do koszyka towary i da kup to co jak ich nie bedzie:
+    Dodać wyrzucenie towarów niedostępnych wszystkich z danej kategorii i wyświetlić komunikat powrót do koszyka
 - fajnie by bylo dodac jakas metode refresh'a do dashboard'a tak zeby widac bylo jak sie zmienia quantity
-- dodac obsluge wyjatkow w modify account register itp niektore sa ale tak tylko dla pewnosci
-~~- usuwanie z cart'a~~
+- dodac obsluge wyjatkow w modify account register itp niektore sa ale tak tylko dla pewnosci   
 - dodac helpersy ktore beda tworzyc randomowy ruch uzytkownikow np call dodawania do koszyka call kupowania call usuwania
-~~- dodać weryfikacje czy uztkownik jest zalogowany i czy ma podpieta karte do endpointow~~
+- dodac call do manufacturerow i update produktow
+- ~~jesli quantity towaru spada na 0 nie powinien byc displayowany~~
+- ~~usuwanie z cart'a~~
+- ~~dodać weryfikacje czy uztkownik jest zalogowany i czy ma podpieta karte do endpointow~~

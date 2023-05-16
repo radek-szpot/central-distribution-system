@@ -4,9 +4,11 @@ from central_distributor.customers.crud import CustomerCRUD, PurchaseCRUD
 from central_distributor.distributor.crud import ProductCRUD
 from central_distributor.distributor.models import Product
 from central_distributor.distributor.distributor import sum_quantities_of_duplicates
+from central_distributor.database import get_session
+import hashlib
 
 customer_blueprint = Blueprint("customer_blueprint", __name__, template_folder='templates')
-
+received_hashes = {}
 
 def product_serializer(obj):
     if isinstance(obj, Product):
@@ -168,16 +170,28 @@ def buy():
     if not (customer.pan_number and customer.cid_number):
         return shopping_cart(details_popup=True)
 
-    for item in cart:
-        product = ProductCRUD.get_product(item["id"])
-        if product.remaining_quantity >= item["user_quantity"]:
-            purchase = PurchaseCRUD.get_purchase_all_filters(customer_id, item["id"])
-            if purchase:
-                PurchaseCRUD.update_purchase(purchase.id, item["user_quantity"])
+    request_hash = hashlib.sha256(str(customer_id).encode()).hexdigest()
+
+    if request_hash in received_hashes:
+        return redirect('/shopping-cart')  # Redirect to avoid double submission
+
+    received_hashes[request_hash] = True
+    db_session = get_session()
+
+    try:
+        for item in cart:
+            product = ProductCRUD.get_product(item["id"], db_session)
+            if product.remaining_quantity >= item["user_quantity"]:
+                purchase = PurchaseCRUD.get_purchase_all_filters(customer_id, item["id"], db_session)
+                if purchase:
+                    PurchaseCRUD.update_purchase(purchase.id, item["user_quantity"], db_session)
+                else:
+                    PurchaseCRUD.create_purchase(customer_id, item["id"], item["user_quantity"], db_session)
+                ProductCRUD.update_product_quantity(item["id"], item["user_quantity"], db_session)
             else:
-                PurchaseCRUD.create_purchase(customer_id, item["id"], item["user_quantity"])
-            ProductCRUD.update_product_quantity(item["id"], item["user_quantity"])
-        else:
-            return shopping_cart(conflict_popup=True)
-    session['cart'] = []
-    return redirect('/shopping-cart')
+                return shopping_cart(conflict_popup=True)
+        session['cart'] = []
+        return redirect('/shopping-cart')
+    finally:
+        del received_hashes[request_hash]
+

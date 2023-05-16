@@ -102,6 +102,7 @@
         </thead>
         <tbody>
             {% for product in products %}
+                {% if product.remaining_quantity %}
                 <tr>
                     <td>{{ product.type }}</td>
                     <td>{{ product.singular_price }}</td>
@@ -114,6 +115,7 @@
                         </form>
                     </td>
                 </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>
