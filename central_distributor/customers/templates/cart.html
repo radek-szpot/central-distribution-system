@@ -18,6 +18,7 @@
         p {
             margin-bottom: 20px;
             color: #666;
+            font-size: 18px;
         }
 
         .cart-container {
@@ -151,5 +152,41 @@
             <p class="empty-cart">Your cart is empty.</p>
         {% endif %}
     </div>
+
+    {% if show_popup %}  <!-- Display the popup only if show_popup is True -->
+    <div class="popup">
+        <div class="popup-content">
+            <h3>Attention!</h3>
+            <p>Please complete your account details before making a purchase.</p>
+            <form action="/modify-account" method="GET" style="display: inline;">
+                <button type="submit">Modify Account</button>
+            </form>
+            <button class="close-button">X</button> <!-- Added a close button -->
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        // JavaScript code for handling the popup
+        document.addEventListener('DOMContentLoaded', function() {
+            var popup = document.querySelector('.popup');
+            var closeButton = document.querySelector('.close-button');
+            var modifyAccountButton = document.querySelector('.modify-account-button');
+
+            function showPopup() {
+                popup.style.display = 'block';
+            }
+
+            function hidePopup() {
+                popup.style.display = 'none';
+            }
+
+            closeButton.addEventListener('click', hidePopup);
+            modifyAccountButton.addEventListener('click', hidePopup);
+
+            // Show the popup when the page loads
+            showPopup();
+        });
+    </script>
 </body>
 </html>

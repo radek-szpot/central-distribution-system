@@ -66,7 +66,7 @@ class ProductCRUD:
         if not session:
             session = get_session()
         try:
-            product = Product(manufacturer_id=manufacturer_id, type=product_type, quantity=quantity,
+            product = Product(manufacturer_id=manufacturer_id, type=product_type, remaining_quantity=quantity,
                               singular_price=price)
             session.add(product)
             session.commit()
@@ -109,6 +109,23 @@ class ProductCRUD:
             if product:
                 session.delete(product)
                 session.commit()
+        except SQLAlchemyError:
+            session.rollback()
+            raise
+        finally:
+            session.close()
+
+    @staticmethod
+    def update_product_quantity(product_id, bought_quantity, session=None):
+        if not session:
+            session = get_session()
+
+        try:
+            product = session.query(Product).filter_by(id=product_id).first()
+            if product:
+                product.remaining_quantity = product.remaining_quantity - bought_quantity
+                session.commit()
+                return product
         except SQLAlchemyError:
             session.rollback()
             raise

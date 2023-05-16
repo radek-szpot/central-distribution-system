@@ -37,24 +37,14 @@ centralized_distribution_system/
 └── main.py
 ```
 
-### Ray usage:
-* manufacturers/:
-* * The manufacturers module can use Ray to parallelize tasks related to fetching and processing goods information from individual manufacturers. For example, if you have multiple manufacturers and need to fetch their product information concurrently, you can distribute the task of fetching information using Ray's task-based parallelism.
-
-* distributor/:
-* * Parallelizing database operations: If the distributor needs to perform heavy database operations, such as querying or updating the distributed database, you can use Ray to parallelize those tasks across multiple workers, improving performance.   
-* * Asynchronous processing of customer requests: Ray's task-based model can be utilized to handle incoming customer requests asynchronously. For example, when a customer places an order, you can dispatch a Ray task to process the order, allowing the distributor to continue serving other customers concurrently.
-
-* load_balancer/:
-* * The load_balancer module can benefit from Ray when distributing customer requests to the distributor instances. Ray can be used to manage and distribute the load balancing tasks across the available distributor instances.
-
-By integrating Ray into these modules, you can take advantage of its distributed computing capabilities, such as task parallelism, load balancing, and resource management. It allows you to scale your system, improve performance, and make efficient use of available resources.
-
-
 
 # Problemy:
 - jak customer doda do koszyka towary i da kup to co jak ich nie bedzie ma kupić to co się da 
 (dostać popup i zaznaczyć czy kupić co się da czy wyczyścić koszyk i wrócic do dashboardu)
+Dodać wyrzucenie towarów niedostępnych wszystkich z danej kategorii i wyświetlić komunikat
+
 - fajnie by bylo dodac jakas metode refresh'a do dashboard'a tak zeby widac bylo jak sie zmienia quantity
 - dodac obsluge wyjatkow w modify account register itp niektore sa ale tak tylko dla pewnosci
-
+~~- usuwanie z cart'a~~
+- dodac helpersy ktore beda tworzyc randomowy ruch uzytkownikow np call dodawania do koszyka call kupowania call usuwania
+- dodać weryfikacje czy uztkownik jest zalogowany i czy ma podpieta karte do endpointow

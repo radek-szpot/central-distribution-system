@@ -2,7 +2,7 @@ from flask import Flask
 from distributor.crud import ManufacturerCRUD, ProductCRUD
 from central_distributor.database import create_database
 from customers.routes import customer_blueprint
-from customers.crud import CustomerCRUD
+from customers.crud import CustomerCRUD, PurchaseCRUD
 import os
 
 URLS = ["ABC.COM", "DEF.COM"]
@@ -44,6 +44,9 @@ def add_test_setup(urls):
         ProductCRUD.create_product("2", "dsa", 3, 4)
         ProductCRUD.create_product("2", "dsa", 3, 4)
         ProductCRUD.create_product("2", "dsadsa", 3, 4)
+    if not CustomerCRUD.get_customer_list():
+        print("created")
+        CustomerCRUD.create_customer("radekulus@interia.pl", "a", "R", "S")
 
 
 # Start the Flask application
@@ -54,4 +57,5 @@ if __name__ == "__main__":
     print(f"manufacturers: {ManufacturerCRUD.get_manufacturer_list()}")
     print(f"products: {ProductCRUD.get_product_list()}")
     print(f"customers: {CustomerCRUD.get_customer_list()}")
+    print(f"purchases: {PurchaseCRUD.get_purchases()}")
     app.run(port=5000)

@@ -24,6 +24,25 @@ def fetch_products_information():
     return products_information
 
 
+def sum_quantities_of_duplicates(items):
+    seen_ids = set()
+    items_with_summed_quantity = []
+
+    for item in items:
+        if item['id'] in seen_ids:
+            # If the id is already seen, find the corresponding item in the result list and update its quantity
+            for existing_item in items_with_summed_quantity:
+                if existing_item['id'] == item['id']:
+                    existing_item['user_quantity'] += item['user_quantity']
+                    break
+        else:
+            # If the id is not seen, add the item to the result list and mark the id as seen
+            seen_ids.add(item['id'])
+            items_with_summed_quantity.append(item)
+
+    return items_with_summed_quantity
+
+
 def handle_customer_request(customer_request):
     # TODO: Handle customer requests and process the purchase
     # TODO: Update the database and notify manufacturers

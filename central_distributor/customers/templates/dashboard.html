@@ -101,7 +101,7 @@
                     <td>{{ product.type }}</td>
                     <td>{{ product.singular_price }}</td>
                     <td>{{ product.manufacturer_id }}</td>
-                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.remaining_quantity }}</td>
                     <td>
                         <form action="/add-to-cart/{{ product.id }}" method="POST" style="display: inline;">
                             <input type="number" name="user_quantity" value="1" min="1">

@@ -20,9 +20,11 @@ class Product(Base):
     id = Column(Integer, primary_key=True)
     manufacturer_id = Column(Integer, ForeignKey('manufacturer.id'))
     type = Column(String, nullable=False)
-    quantity = Column(Integer, nullable=False)
+    remaining_quantity = Column(Integer, nullable=False)
     singular_price = Column(Float, nullable=False)
+
     manufacturer = relationship('Manufacturer', back_populates='products')
+    purchases = relationship('Purchase', back_populates='product')
 
     def __repr__(self):
-        return f"<Product(id={self.id}, type={self.type}, quantity={self.quantity}, price={self.singular_price})>"
+        return f"<Product(id={self.id}, type={self.type}, quantity={self.remaining_quantity}, price={self.singular_price})>"

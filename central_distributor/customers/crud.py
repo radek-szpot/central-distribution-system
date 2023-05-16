@@ -1,7 +1,8 @@
 from sqlalchemy.exc import SQLAlchemyError
 from central_distributor.database import get_session
-from central_distributor.customers.models import Customer
-from sqlalchemy import select, insert
+from central_distributor.customers.models import Customer, Purchase
+from sqlalchemy import select, insert, update
+from sqlalchemy.orm import Session
 
 
 class CustomerCRUD:
@@ -31,7 +32,7 @@ class CustomerCRUD:
             customer = session.execute(query).fetchone()
         finally:
             session.close()
-        return customer
+        return customer[0] if customer else None
 
     @staticmethod
     def get_customer_by_credentials(email, password):
@@ -41,7 +42,7 @@ class CustomerCRUD:
             customer = session.execute(query).fetchone()
         finally:
             session.close()
-        return customer
+        return customer[0] if customer else None
 
     @staticmethod
     def get_customer_list():
@@ -65,3 +66,61 @@ class CustomerCRUD:
             raise
         finally:
             session.close()
+
+
+class PurchaseCRUD:
+    @staticmethod
+    def create_purchase(customer_id: int, product_id: int, quantity: int, session=None):
+        if not session:
+            session = get_session()
+
+        purchase = Purchase(customer_id=customer_id, product_id=product_id, quantity=quantity)
+        session.add(purchase)
+        session.commit()
+        session.refresh(purchase)
+        return purchase
+
+    @staticmethod
+    def get_purchase(purchase_id: int, session=None):
+        if not session:
+            session = get_session()
+
+        return session.query(Purchase).filter(Purchase.id == purchase_id).first()
+
+    @staticmethod
+    def get_purchases():
+        session = get_session()
+        try:
+            purchase = session.query(Purchase).all()
+        finally:
+            session.close()
+        return purchase
+
+    @staticmethod
+    def update_purchase(purchase_id: int, customer_id: int = None, product_id: int = None, quantity: int = None,
+                        session=None):
+        if not session:
+            session = get_session()
+
+        purchase = PurchaseCRUD.get_purchase(purchase_id, session)
+        if purchase:
+            if customer_id is not None:
+                purchase.customer_id = customer_id
+            if product_id is not None:
+                purchase.product_id = product_id
+            if quantity is not None:
+                purchase.quantity = quantity
+            session.commit()
+            session.refresh(purchase)
+        return purchase
+
+    @staticmethod
+    def delete_purchase(purchase_id: int, session=None):
+        if not session:
+            session = get_session()
+
+        purchase = PurchaseCRUD.get_purchase(purchase_id, session)
+        if purchase:
+            session.delete(purchase)
+            session.commit()
+        return purchase
