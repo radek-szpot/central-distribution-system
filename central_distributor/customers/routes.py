@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, session, url_for, flash
+from flask import Blueprint, render_template, request, redirect, session, url_for, flash, jsonify
 from functools import wraps
 from central_distributor.customers.crud import CustomerCRUD, PurchaseCRUD
 from central_distributor.distributor.crud import ProductCRUD
@@ -130,6 +130,14 @@ def dashboard():
     cart = session.get('cart', [])
     products = ProductCRUD.get_product_list()
     return render_template('dashboard.html', cart=cart, products=products)
+
+
+@customer_blueprint.route('/get-remaining-quantities')
+def get_remaining_quantities():
+    products = ProductCRUD.get_product_list()
+    remaining_quantities = {product.id: product.remaining_quantity for product in products}
+
+    return jsonify(remaining_quantities=remaining_quantities)
 
 
 @customer_blueprint.route('/shopping-cart')

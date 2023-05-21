@@ -73,6 +73,35 @@
             background-color: #1976D2;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Function to update the remaining quantities for all products
+            function updateRemainingQuantities() {
+                $.ajax({
+                    url: '/get-remaining-quantities',
+                    type: 'GET',
+                    success: function(response) {
+                        // Update the remaining quantity values on the page
+                        $.each(response.remaining_quantities, function(productId, remainingQuantity) {
+                            $('#remaining-quantity-' + productId).text(remainingQuantity);
+                        });
+                    },
+                    error: function() {
+                        console.log('Error occurred while updating remaining quantities.');
+                    }
+                });
+            }
+
+            // Function to periodically update the remaining quantity values
+            function autoRefreshRemainingQuantities() {
+                updateRemainingQuantities();
+            }
+
+            // Auto-refresh remaining quantities every 30 seconds (adjust as needed)
+            setInterval(autoRefreshRemainingQuantities, 30000);
+        });
+    </script>
 </head>
 <body>
     <h1>Dashboard</h1>
@@ -107,7 +136,7 @@
                     <td>{{ product.type }}</td>
                     <td>{{ product.singular_price }}</td>
                     <td>{{ product.manufacturer_id }}</td>
-                    <td>{{ product.remaining_quantity }}</td>
+                    <td><span id="remaining-quantity-{{ product.id }}">{{ product.remaining_quantity }}</span></td>
                     <td>
                         <form action="/add-to-cart/{{ product.id }}" method="POST" style="display: inline;">
                             <input type="number" name="user_quantity" value="1" min="1" max="{{ product.remaining_quantity }}">

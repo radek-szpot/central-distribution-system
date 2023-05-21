@@ -41,7 +41,7 @@ centralized_distribution_system/
 # Problemy:
 - jak customer doda do koszyka towary i da kup to co jak ich nie bedzie:
     Dodać wyrzucenie towarów niedostępnych wszystkich z danej kategorii i wyświetlić komunikat powrót do koszyka
-- fajnie by bylo dodac jakas metode refresh'a do dashboard'a tak zeby widac bylo jak sie zmienia quantity
+- ~~fajnie by bylo dodac jakas metode refresh'a do dashboard'a tak zeby widac bylo jak sie zmienia quantity~~
 - dodac helpersy ktore beda tworzyc randomowy ruch uzytkownikow np call dodawania do koszyka call kupowania call usuwania
 - dodac call do manufacturerow i update produktow
 - ~~jesli quantity towaru spada na 0 nie powinien byc displayowany~~
