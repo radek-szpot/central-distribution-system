@@ -110,7 +110,7 @@
                     <td>{{ product.remaining_quantity }}</td>
                     <td>
                         <form action="/add-to-cart/{{ product.id }}" method="POST" style="display: inline;">
-                            <input type="number" name="user_quantity" value="1" min="1">
+                            <input type="number" name="user_quantity" value="1" min="1" max="{{ product.remaining_quantity }}">
                             <button type="submit" class="add-to-cart-button">Add to Cart</button>
                         </form>
                     </td>
