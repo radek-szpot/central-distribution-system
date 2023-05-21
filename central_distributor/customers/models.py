@@ -8,7 +8,7 @@ class Customer(Base):
 
     id = Column(Integer, primary_key=True)
     password = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    email = Column(String, nullable=False, unique=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     pan_number = Column(Numeric, nullable=True)

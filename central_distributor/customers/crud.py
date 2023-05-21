@@ -1,4 +1,4 @@
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from central_distributor.database import get_session
 from central_distributor.customers.models import Customer, Purchase
 from sqlalchemy import select, insert, update
@@ -15,7 +15,7 @@ class CustomerCRUD:
                                             cid_number=cid_number if cid_number else None)
             customer = session.execute(query)
             session.commit()
-        except SQLAlchemyError:
+        except (SQLAlchemyError, IntegrityError):
             session.rollback()
             raise
         finally:

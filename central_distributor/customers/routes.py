@@ -6,9 +6,11 @@ from central_distributor.distributor.models import Product
 from central_distributor.distributor.distributor import sum_quantities_of_duplicates
 from central_distributor.database import get_session
 import hashlib
+from sqlalchemy.exc import IntegrityError, StatementError
 
 customer_blueprint = Blueprint("customer_blueprint", __name__, template_folder='templates')
 received_hashes = {}
+
 
 def product_serializer(obj):
     if isinstance(obj, Product):
@@ -33,6 +35,15 @@ def redirect_unauthenticated_user(endpoint):
     return decorated_function
 
 
+def is_customer_input_valid(customer_dict):
+    error_message = False
+    if customer_dict["pan_number"] and len(customer_dict["pan_number"]) != 16:
+        error_message = 'PAN number must be combination of 16 numbers!'
+    if customer_dict["cid_number"] and len(customer_dict["cid_number"]) != 3:
+        error_message = 'CID number must be combination of 3 numbers!'
+    return error_message
+
+
 @customer_blueprint.route('/')
 def home():
     return render_template('index.html')
@@ -41,7 +52,18 @@ def home():
 @customer_blueprint.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        customer = CustomerCRUD.create_customer(**request.form.to_dict())
+        request_dict = request.form.to_dict()
+        error_message = is_customer_input_valid(request_dict)
+        if error_message:
+            return render_template('signup.html', error_message=error_message)
+        try:
+            customer = CustomerCRUD.create_customer(**request_dict)
+        except IntegrityError:
+            error_message = 'Email is already in use!'
+            return render_template('signup.html', error_message=error_message)
+        except StatementError:
+            error_message = 'PAN and CID numbers must be digits!'
+            return render_template('signup.html', error_message=error_message)
         if customer:
             return render_template('login.html')
         return render_template('signup.html', error=True)
@@ -194,4 +216,3 @@ def buy():
         return redirect('/shopping-cart')
     finally:
         del received_hashes[request_hash]
-
