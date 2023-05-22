@@ -1,6 +1,8 @@
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from central_distributor.database import get_session
 from central_distributor.customers.models import Customer, Purchase
+from central_distributor.customers.serializers import purchase_history_serializer
+from central_distributor.distributor.models import Product, Manufacturer
 from sqlalchemy import select, insert, update
 
 
@@ -103,6 +105,24 @@ class PurchaseCRUD:
             session = get_session()
 
         return session.query(Purchase).filter(Purchase.id == purchase_id).first()
+
+    @staticmethod
+    def get_purchase_history(customer_id: int, session=None):
+        if not session:
+            session = get_session()
+
+        purchase_product_query = (
+            session.query(Purchase)
+            .join(Product)
+            .filter(Purchase.customer_id == customer_id)
+            .with_entities(Purchase, Product.type, Product.singular_price, Manufacturer.name)
+            .join(Manufacturer, Product.manufacturer_id == Manufacturer.id)
+            .subquery()
+        )
+        purchases = session.query(*purchase_product_query.c).all()
+        session.close()
+
+        return [purchase_history_serializer(purchase) for purchase in purchases]
 
     @staticmethod
     def get_purchase_all_filters(customer_id: int, product_id: int, session=None):

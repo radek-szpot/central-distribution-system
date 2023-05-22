@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.hybrid import hybrid_property
 from central_distributor.database import Base
 
 
@@ -20,7 +21,6 @@ class Product(Base):
 
     id = Column(Integer, primary_key=True)
     manufacturer_id = Column(Integer, ForeignKey('manufacturer.id'))
-    manufacturer_name = Column(String)  # New column for manufacturer name
     type = Column(String, nullable=False)
     remaining_quantity = Column(Integer, nullable=False)
     singular_price = Column(Float, nullable=False)

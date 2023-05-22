@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping History</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            margin-top: 50px;
+            color: #333;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 18px;
+        }
+
+        .button-container {
+            margin-bottom: 10px;
+        }
+
+        .button-container form {
+            display: inline-block;
+        }
+
+        .button-container button, .button-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-container button:hover, .button-container a:hover {
+            background-color: #45a049;
+        }
+
+        .logout-button {
+            background-color: #f44336;
+        }
+
+        .logout-button:hover {
+            background-color: #d32f2f;
+        }
+
+        .buy-button {
+            background-color: #2196F3;
+        }
+
+        .buy-button:hover {
+            background-color: #1976D2;
+        }
+
+        .back-button {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .back-button:hover {
+            background-color: #999;
+        }
+
+        .history-container {
+            width: 80%;
+            margin: 20px auto;
+            text-align: left;
+        }
+
+        .history-container h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .history-container p {
+            color: #666;
+        }
+
+        .history-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-container th,
+        .history-container td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .history-container th {
+            background-color: #f2f2f2;
+        }
+
+        .history-container p.empty-history {
+            font-style: italic;
+            color: #999;
+        }
+
+        .separator {
+            width: 90%;
+            margin: 20px auto;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shopping History</h1>
+    <p>Below are listed all your transactions</p>
+
+    <div class="button-container">
+        <form action="/logout" method="POST" style="display: inline;">
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+        <form action="/dashboard" method="GET" style="display: inline;">
+            <button type="submit">Return to dashboard</button>
+        </form>
+        <form action="/shopping-cart" method="GET" style="display: inline;">
+            <button type="submit">Return to cart</button>
+        </form>
+    </div>
+
+    <div class="history-container">
+        <h2 style="color: #333;">Purchase History</h2>
+        {% if history %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Type</th>
+                        <th>Manufacturer</th>
+                        <th>Singular Price</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Product status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchase in history %}
+                        <tr>
+                            <td>{{ purchase.product_type }}</td>
+                            <td>{{ purchase.manufacturer_name }}</td>
+                            <td>{{ purchase.product_price }}</td>
+                            <td>{{ purchase.quantity }}</td>
+                            <td>{{ purchase.product_price * purchase.quantity }}</td>
+                            <td>{{ purchase.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="empty-history">No purchase history available.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

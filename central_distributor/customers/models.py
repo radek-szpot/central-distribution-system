@@ -27,6 +27,7 @@ class Purchase(Base):
     customer_id = Column(Integer, ForeignKey('customer.id'))
     product_id = Column(Integer, ForeignKey('product.id'))
     quantity = Column(Integer, nullable=False)
+    status = Column(String, default="Paid")
 
     customer = relationship('Customer', back_populates='purchases')
     product = relationship('Product', back_populates='purchases')

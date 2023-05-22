@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, session, url_for, flash, jsonify
 from functools import wraps
 from central_distributor.customers.crud import CustomerCRUD, PurchaseCRUD
+from central_distributor.customers.serializers import product_serializer
 from central_distributor.distributor.crud import ProductCRUD
-from central_distributor.distributor.models import Product
 from central_distributor.distributor.distributor import sum_quantities_of_duplicates
 from central_distributor.database import get_session
 import hashlib
@@ -10,18 +10,6 @@ from sqlalchemy.exc import IntegrityError, StatementError
 
 customer_blueprint = Blueprint("customer_blueprint", __name__, template_folder='templates')
 received_hashes = {}
-
-
-def product_serializer(obj):
-    if isinstance(obj, Product):
-        return {
-            "id": obj.id,
-            "manufacturer_id": obj.manufacturer_id,
-            "type": obj.type,
-            "quantity": obj.remaining_quantity,
-            "singular_price": obj.singular_price,
-        }
-    raise TypeError("Object of type 'Product' is not JSON serializable")
 
 
 def redirect_unauthenticated_user(endpoint):
@@ -125,10 +113,11 @@ def delete_account():
 @redirect_unauthenticated_user
 def dashboard():
     """Display the customer's dashboard"""
-    # Retrieve the cart from the session
     cart = session.get('cart', [])
     products = ProductCRUD.get_product_list()
-    return render_template('dashboard.html', cart=cart, products=products)
+    customer = CustomerCRUD.get_customer(session.get('customer_id', []))
+    return render_template('dashboard.html', cart=cart, products=products,
+                           name=f"{customer.first_name} {customer.last_name}")
 
 
 @customer_blueprint.route('/get-remaining-quantities')
@@ -143,9 +132,8 @@ def get_remaining_quantities():
 @redirect_unauthenticated_user
 def shopping_cart(details_popup=False, conflict_popup=False):
     """Display the customer's shopping-cart"""
-    # Retrieve the cart from the session
     if conflict_popup:
-        # todo: remove all items from group where there was a conflict
+        # todo: remove all items from group where there was a conflict and notify customer about that
         pass
     cart = session.get('cart', [])
     whole_price = 0
@@ -155,6 +143,15 @@ def shopping_cart(details_popup=False, conflict_popup=False):
         whole_price += price
     return render_template('cart.html', cart=cart, whole_price=whole_price, details_popup=details_popup,
                            conflict_popup=False)
+
+
+@customer_blueprint.route('/shopping-history')
+@redirect_unauthenticated_user
+def shopping_history():
+    """Display the customer's shopping history"""
+    purchases_history = PurchaseCRUD.get_purchase_history(session.get('customer_id', []))
+    print(purchases_history)
+    return render_template('shopping_history.html', history=purchases_history)
 
 
 @customer_blueprint.route('/add-to-cart/<int:product_id>', methods=['POST'])

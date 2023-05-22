@@ -39,16 +39,16 @@ centralized_distribution_system/
 
 
 # TODO i problemy:
-- Zakładka na hisotrie zakupionych produktów + jakieś statusy
+- ~~Zakładka na hisotrie zakupionych produktów + jakieś statusy~~
 - ~~Mapping producenta z id na nazwe~~
 - jak customer doda do koszyka towary i da kup to co jak ich nie bedzie:
     Dodać wyrzucenie towarów niedostępnych wszystkich z danej kategorii i wyświetlić komunikat powrót do koszyka
 - ~~fajnie by bylo dodac jakas metode refresh'a do dashboard'a tak zeby widac bylo jak sie zmienia quantity~~
-- dodac call do manufacturerow i update produktow moduł `distribiutor.py`
+- Dodać call do manufacturerow i update produktow moduł `distribiutor.py`
 - ~~jesli quantity towaru spada na 0 nie powinien byc displayowany~~
 - ~~usuwanie z cart'a~~
 - ~~dodać weryfikacje czy uztkownik jest zalogowany i czy ma podpieta karte do endpointow~~
 - ~~Dodać unique na email + formatowanie karty kredytowej~~
 - ~~Dodać ogranmiczenie na input itemow do koszyka max tyle co jest na display'u~~
 - Dodać weryfikacje z bazy przy klikniecu add item (czy sa jeszcze itemy) i przy kliknieciu w cart rownież
-- dodac helpersy ktore beda tworzyc randomowy ruch uzytkownikow np call dodawania do koszyka call kupowania call usuwania
+- Dodać helpersy ktore beda tworzyc randomowy ruch uzytkownikow np call dodawania do koszyka call kupowania call usuwania
