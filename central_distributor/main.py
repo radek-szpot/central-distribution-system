@@ -13,8 +13,8 @@ app.register_blueprint(customer_blueprint)
 
 
 def add_test_setup(urls):
-    for url in urls:
-        ManufacturerCRUD.create_manufacturer(url)
+    for i, url in enumerate(urls):
+        ManufacturerCRUD.create_manufacturer(url, f"Manufacturer {chr(i+65)}")
     if not ProductCRUD.get_product_list():
         ProductCRUD.create_product("1", "apple", 100, 3)
         ProductCRUD.create_product("1", "pear", 100, 5)

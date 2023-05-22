@@ -80,7 +80,6 @@ def login():
         customer = CustomerCRUD.get_customer_by_credentials(email, password)
         if customer:
             session['logged_in'] = True
-            print(customer.id)
             session['customer_id'] = customer.id
             return redirect('/dashboard')
 

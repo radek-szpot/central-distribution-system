@@ -135,7 +135,7 @@
                 <tr>
                     <td>{{ product.type }}</td>
                     <td>{{ product.singular_price }}</td>
-                    <td>{{ product.manufacturer_id }}</td>
+                    <td>{{ product.manufacturer_name }}</td>
                     <td><span id="remaining-quantity-{{ product.id }}">{{ product.remaining_quantity }}</span></td>
                     <td>
                         <form action="/add-to-cart/{{ product.id }}" method="POST" style="display: inline;">

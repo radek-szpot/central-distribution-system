@@ -7,6 +7,7 @@ class Manufacturer(Base):
     __tablename__ = 'manufacturer'
 
     id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
     url = Column(String, nullable=False)
     products = relationship('Product', back_populates='manufacturer')
 
@@ -19,6 +20,7 @@ class Product(Base):
 
     id = Column(Integer, primary_key=True)
     manufacturer_id = Column(Integer, ForeignKey('manufacturer.id'))
+    manufacturer_name = Column(String)  # New column for manufacturer name
     type = Column(String, nullable=False)
     remaining_quantity = Column(Integer, nullable=False)
     singular_price = Column(Float, nullable=False)

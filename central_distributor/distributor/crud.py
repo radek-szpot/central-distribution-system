@@ -6,12 +6,12 @@ from sqlalchemy import select
 
 class ManufacturerCRUD:
     @staticmethod
-    def create_manufacturer(url, session=None):
+    def create_manufacturer(url, name, session=None):
         if not session:
             session = get_session()
 
         try:
-            manufacturer = Manufacturer(url=url)
+            manufacturer = Manufacturer(url=url, name=name)
             session.add(manufacturer)
             session.commit()
         except SQLAlchemyError:
@@ -92,9 +92,10 @@ class ProductCRUD:
     def get_product_list(session=None):
         if not session:
             session = get_session()
-
         try:
             products = session.query(Product).all()
+            for product in products:
+                product.manufacturer_name = product.manufacturer.name
         finally:
             session.close()
         return products
