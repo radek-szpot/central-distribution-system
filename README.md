@@ -41,10 +41,10 @@ centralized_distribution_system/
 # TODO i problemy:
 - ~~Zakładka na hisotrie zakupionych produktów + jakieś statusy~~
 - ~~Mapping producenta z id na nazwe~~
-- jak customer doda do koszyka towary i da kup to co jak ich nie bedzie:
+- Jak customer doda do koszyka towary i da kup to co jak ich nie bedzie:   
     Dodać wyrzucenie towarów niedostępnych wszystkich z danej kategorii i wyświetlić komunikat powrót do koszyka
 - ~~fajnie by bylo dodac jakas metode refresh'a do dashboard'a tak zeby widac bylo jak sie zmienia quantity~~
-- Dodać call do manufacturerow i update produktow moduł `distribiutor.py`
+- ~~Dodać call do manufacturerow i update produktow moduł `distribiutor.py`~~
 - ~~jesli quantity towaru spada na 0 nie powinien byc displayowany~~
 - ~~usuwanie z cart'a~~
 - ~~dodać weryfikacje czy uztkownik jest zalogowany i czy ma podpieta karte do endpointow~~
@@ -52,3 +52,23 @@ centralized_distribution_system/
 - ~~Dodać ogranmiczenie na input itemow do koszyka max tyle co jest na display'u~~
 - Dodać weryfikacje z bazy przy klikniecu add item (czy sa jeszcze itemy) i przy kliknieciu w cart rownież
 - Dodać helpersy ktore beda tworzyc randomowy ruch uzytkownikow np call dodawania do koszyka call kupowania call usuwania
+- ### Dodać kolejkowanie:
+To ensure that the information about a purchased product is updated in the manufacturer's database before responding to subsequent calls from the central distributor to get all available products, you can introduce a synchronization mechanism.
+
+One possible approach is to use a message queue system, such as RabbitMQ or Apache Kafka, to decouple the communication between the central distributor and the manufacturer apps. Here's how you can modify your code to incorporate a message queue:
+
+1. Set up a message queue system: Install and configure RabbitMQ or Apache Kafka according to your preference. This will serve as the communication channel between the central distributor and the manufacturer apps.
+
+2. Modify the manufacturer apps:
+   - Instead of exposing the `/all_products` endpoint directly, the manufacturer apps should listen to messages from the message queue system.
+   - When a message is received indicating a product purchase, the app should update its local database with the purchased product information.
+
+3. Modify the central distributor app:
+   - Instead of directly calling the manufacturer endpoints, the central distributor app should publish a message to the message queue system indicating a product purchase.
+   - After publishing the message, the central distributor can proceed with other tasks.
+   - The central distributor can have a separate endpoint for retrieving all available products, which can be called periodically or on demand by other services.
+   - When the central distributor receives a response from a manufacturer indicating that the product purchase message has been processed and the manufacturer's database is updated, it can then fetch the updated product information from the manufacturer and respond to subsequent requests for all available products.
+
+With this approach, the central distributor and the manufacturer apps are decoupled, and the synchronization is achieved through the message queue system. The manufacturer apps update their local databases upon receiving purchase messages, and the central distributor fetches the updated product information after receiving confirmation from the manufacturer.
+
+Note: Implementing a message queue system requires additional setup and configuration. You may need to familiarize yourself with the specific message queue system you choose and adjust the code accordingly.

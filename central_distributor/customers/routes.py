@@ -3,7 +3,7 @@ from functools import wraps
 from central_distributor.customers.crud import CustomerCRUD, PurchaseCRUD
 from central_distributor.customers.serializers import product_serializer
 from central_distributor.distributor.crud import ProductCRUD
-from central_distributor.distributor.distributor import sum_quantities_of_duplicates
+from central_distributor.distributor.distributor import sum_quantities_of_duplicates, update_available_products
 from central_distributor.database import get_session
 import hashlib
 from sqlalchemy.exc import IntegrityError, StatementError
@@ -113,6 +113,7 @@ def delete_account():
 @redirect_unauthenticated_user
 def dashboard():
     """Display the customer's dashboard"""
+    update_available_products()
     cart = session.get('cart', [])
     products = ProductCRUD.get_product_list()
     customer = CustomerCRUD.get_customer(session.get('customer_id', []))

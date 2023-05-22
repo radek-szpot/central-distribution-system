@@ -1,7 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
 from central_distributor.database import get_session
 from central_distributor.distributor.models import Product, Manufacturer
-from sqlalchemy import select
 
 
 class ManufacturerCRUD:
@@ -31,6 +30,19 @@ class ManufacturerCRUD:
         finally:
             session.close()
         return manufacturer
+
+    @staticmethod
+    def get_manufacturer_urls(session=None):
+        if not session:
+            session = get_session()
+
+        try:
+            manufacturers = session.query(Manufacturer.url).all()
+            manufacturer_urls = [manufacturer.url for manufacturer in manufacturers]
+        finally:
+            session.close()
+
+        return manufacturer_urls
 
     @staticmethod
     def get_manufacturer_list(session=None):
@@ -75,6 +87,29 @@ class ProductCRUD:
             raise
         finally:
             session.close()
+        return product
+
+    @staticmethod
+    def create_or_update_product(manufacturer_id, product_type, quantity, price, session=None):
+        if not session:
+            session = get_session()
+        try:
+            product = session.query(Product).filter_by(manufacturer_id=manufacturer_id, type=product_type).first()
+
+            if product:
+                product.remaining_quantity = quantity
+                product.singular_price = price
+            else:
+                product = Product(manufacturer_id=manufacturer_id, type=product_type,
+                                  remaining_quantity=quantity, singular_price=price)
+                session.add(product)
+            session.commit()
+        except SQLAlchemyError:
+            session.rollback()
+            raise
+        finally:
+            session.close()
+
         return product
 
     @staticmethod

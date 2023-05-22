@@ -6,9 +6,9 @@ from sqlalchemy.orm import sessionmaker
 Base = declarative_base()
 
 
-def create_database():
+def create_database(path="inventory.db"):
     """Create the SQLite engine and tables"""
-    engine = create_engine('sqlite:///inventory.db')
+    engine = create_engine(f'sqlite:///{path}')
     Base.metadata.create_all(engine)
 
 

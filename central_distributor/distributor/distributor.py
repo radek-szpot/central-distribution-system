@@ -1,20 +1,17 @@
+from central_distributor.distributor.crud import ProductCRUD, ManufacturerCRUD
 import requests
 
-manufacturer_endpoints = [
-    "http://127.0.0.1:5001/",
-    "http://127.0.0.1:5002/",
-    "http://127.0.0.1:5003/",
-]
 
-
-def fetch_products_information():
+def fetch_products_information(manufacturer_list):
     products_information = []
 
-    for endpoint in manufacturer_endpoints:
+    for manufacturer in manufacturer_list:
+        endpoint = manufacturer.url
         try:
             response = requests.get(f"{endpoint}/all_products")
             if response.status_code == 200:
                 products_info = response.json()
+                products_info["manufacturer_id"] = manufacturer.id
                 products_information.append(products_info)
             else:
                 print(f"Error accessing goods information from {endpoint}")
@@ -22,6 +19,22 @@ def fetch_products_information():
             print(f"Error connecting to {endpoint}: {e}")
 
     return products_information
+
+
+def update_available_products():
+    manufacturer_list = ManufacturerCRUD.get_manufacturer_list()
+    products = fetch_products_information(manufacturer_list)
+
+    for product_info in products:
+        manufacturer_id = product_info.get("manufacturer_id")
+        product_type = product_info.get("product_type")
+        quantity = product_info.get("quantity")
+        singular_price = product_info.get("singular_price")
+
+        if product_type and quantity and singular_price is not None:
+            ProductCRUD.create_or_update_product(manufacturer_id, product_type, quantity, singular_price)
+        else:
+            print("Invalid product information received")
 
 
 def sum_quantities_of_duplicates(items):
