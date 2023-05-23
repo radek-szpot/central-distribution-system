@@ -11,48 +11,12 @@ The goal of the described system is to enable the distribution of goods from man
 ### System scope:   
 The system scope also includes parallel production of goods by manufacturers and the ability of the Distribution Center to serve multiple customers simultaneously. The system gathers information on the availability of goods from manufacturers and stores it in the Distribution Center. The system aims to effectively serve customers by selling them goods based on accurate information about the current stock status.
 
-### Project structure:
-```
-centralized_distribution_system/
-├── manufacturers/
-│   ├── manufacturer1.py
-│   ├── manufacturer2.py
-│   └── ...
-├── distributor/
-│   ├── distributor.py
-│   ├── database.py
-│   └── message_broker.py
-├── customers/
-│   ├── models.py
-│   ├── routes.py
-│   ├── templates/
-│   │   ├── login.html
-│   │   ├── signup.html
-│   │   ├── dashboard.html
-│   │   └── ...
-│   └── __init__.py
-├── load_balancer/
-│   ├── load_balancer.py
-│   └── config.yml
-└── main.py
-```
-
-
-# TODO i problemy:
-- ~~Zakładka na hisotrie zakupionych produktów + jakieś statusy~~
-- ~~Mapping producenta z id na nazwe~~
-- Jak customer doda do koszyka towary i da kup to co jak ich nie bedzie:   
-    Dodać wyrzucenie towarów niedostępnych wszystkich z danej kategorii i wyświetlić komunikat powrót do koszyka
-- ~~fajnie by bylo dodac jakas metode refresh'a do dashboard'a tak zeby widac bylo jak sie zmienia quantity~~
-- ~~Dodać call do manufacturerow i update produktow moduł `distribiutor.py`~~
-- ~~jesli quantity towaru spada na 0 nie powinien byc displayowany~~
-- ~~usuwanie z cart'a~~
-- ~~dodać weryfikacje czy uztkownik jest zalogowany i czy ma podpieta karte do endpointow~~
-- ~~Dodać unique na email + formatowanie karty kredytowej~~
-- ~~Dodać ogranmiczenie na input itemow do koszyka max tyle co jest na display'u~~
-- Dodać weryfikacje z bazy przy klikniecu add item (czy sa jeszcze itemy) i przy kliknieciu w cart rownież
-- Dodać helpersy ktore beda tworzyc randomowy ruch uzytkownikow np call dodawania do koszyka call kupowania call usuwania
-- ### Dodać kolejkowanie:
+# problems and ajdustments:
+- What if customer adds products to cart or try to buy product and in the meantime they won't be available anymore?   
+    ↳ Add removing not available products (all row even if only one of many is not available) and show popup to inform user about that
+- Add verification from database when adding item to cart, watching cart add popup if some items are not avaivable anymore
+- Add helpers to simulate random network trafiic for presentation (calls from users adding items to cart, buying them) 
+- ### Add queue system:
 To ensure that the information about a purchased product is updated in the manufacturer's database before responding to subsequent calls from the central distributor to get all available products, you can introduce a synchronization mechanism.
 
 One possible approach is to use a message queue system, such as RabbitMQ or Apache Kafka, to decouple the communication between the central distributor and the manufacturer apps. Here's how you can modify your code to incorporate a message queue:
