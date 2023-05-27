@@ -17,7 +17,7 @@
 
         p {
             margin-bottom: 20px;
-            color: #666;
+            color: #444;
             font-size: 18px;
         }
 
@@ -111,6 +111,10 @@
             margin: 20px auto;
             border-top: 1px solid #ddd;
         }
+
+        .popup-heading {
+        color: red;
+        }
     </style>
 </head>
 <body>
@@ -149,7 +153,7 @@
                     {% for product in cart %}
                         <tr>
                             <td>{{ product.type }}</td>
-                            <td>{{ product.manufacturer_id }}</td>
+                            <td>{{ product.manufacturer_name }}</td>
                             <td>{{ product.singular_price }}</td>
                             <td>{{ product.user_quantity }}</td>
                             <td>{{ product.price }}</td>
@@ -170,11 +174,13 @@
     {% if details_popup %}
     <div class="popup">
         <div class="popup-content">
-            <h3>Attention!</h3>
-            <p>Please complete your account details before making a purchase.</p>
+            <h3 class="popup-heading">Attention!</h3>
+            <p>{{ details_popup }}</p>
+            {% if cc_missing %}
             <form action="/modify-account" method="GET" style="display: inline;">
                 <button type="submit">Modify Account</button>
             </form>
+            {% endif %}
             <button class="close-button">X</button>
         </div>
     </div>

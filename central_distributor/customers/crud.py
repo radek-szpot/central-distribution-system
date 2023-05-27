@@ -125,13 +125,14 @@ class PurchaseCRUD:
         return [purchase_history_serializer(purchase) for purchase in purchases]
 
     @staticmethod
-    def get_purchase_all_filters(customer_id: int, product_id: int, session=None):
+    def get_purchase_all_filters(customer_id: int, product_id: int, status: str, session=None):
         if not session:
             session = get_session()
 
         return session.query(Purchase).filter(
             Purchase.customer_id == customer_id,
-            Purchase.product_id == product_id
+            Purchase.product_id == product_id,
+            Purchase.status == status,
         ).first()
 
     @staticmethod

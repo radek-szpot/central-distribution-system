@@ -19,7 +19,7 @@ def product_serializer(obj):
     if isinstance(obj, Product):
         return {
             "id": obj.id,
-            "manufacturer_id": obj.manufacturer_id,
+            "manufacturer_name": obj.manufacturer_name if obj.manufacturer_name else obj.manufacturer_id,
             "type": obj.type,
             "quantity": obj.remaining_quantity,
             "singular_price": obj.singular_price,

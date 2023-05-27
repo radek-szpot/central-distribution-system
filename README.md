@@ -11,11 +11,11 @@ The goal of the described system is to enable the distribution of goods from man
 ### System scope:   
 The system scope also includes parallel production of goods by manufacturers and the ability of the Distribution Center to serve multiple customers simultaneously. The system gathers information on the availability of goods from manufacturers and stores it in the Distribution Center. The system aims to effectively serve customers by selling them goods based on accurate information about the current stock status.
 
-# problems and ajdustments:
-- What if customer adds products to cart or try to buy product and in the meantime they won't be available anymore?   
-    ↳ Add removing not available products (all row even if only one of many is not available) and show popup to inform user about that
-- Add verification from database when adding item to cart, watching cart add popup if some items are not avaivable anymore
-- Add helpers to simulate random network trafiic for presentation (calls from users adding items to cart, buying them) 
+# problems and adjustments:
+- ~~What if customer adds products to cart or try to buy product and in the meantime they won't be available anymore?~~   
+    ~~↳ Add removing not available products (all row even if only one of many is not available) and show popup to inform user about that~~
+- ~~Add verification from database when adding item to cart, watching cart add popup if some items are not available anymore~~
+- Add helpers to simulate random network traffic for presentation (calls from users adding items to cart, buying them) 
 - ### Add queue system:
 To ensure that the information about a purchased product is updated in the manufacturer's database before responding to subsequent calls from the central distributor to get all available products, you can introduce a synchronization mechanism.
 
