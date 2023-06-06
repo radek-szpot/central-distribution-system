@@ -1,18 +1,20 @@
-from flask import Blueprint, render_template, request, redirect, session, url_for, jsonify
+import hashlib
+from copy import deepcopy
+
+from flask import (Blueprint, redirect, render_template, request,
+                   session, url_for)
+from markupsafe import Markup
+from sqlalchemy.exc import IntegrityError, StatementError
+
 from central_distributor.customers.crud import CustomerCRUD, PurchaseCRUD
 from central_distributor.customers.serializers import product_serializer
-from central_distributor.distributor.crud import ProductCRUD, ManufacturerCRUD
-from central_distributor.distributor.distributor import sum_quantities_of_duplicates
-from central_distributor.database import get_session
-import hashlib
-from sqlalchemy.exc import IntegrityError, StatementError
-from copy import deepcopy
-from markupsafe import Markup
 from central_distributor.customers.validators import (
-    redirect_unauthenticated_user,
-    is_customer_input_valid,
-    items_still_available,
-)
+    is_customer_input_valid, items_still_available,
+    redirect_unauthenticated_user)
+from central_distributor.database import get_session
+from central_distributor.distributor.crud import ManufacturerCRUD, ProductCRUD
+from central_distributor.distributor.distributor import \
+    sum_quantities_of_duplicates
 
 customer_blueprint = Blueprint("customer_blueprint", __name__, template_folder='templates')
 received_hashes = {}
@@ -99,20 +101,11 @@ def delete_account():
 @redirect_unauthenticated_user
 def dashboard():
     """Display the customer's dashboard"""
-    # update_available_products()
     cart = session.get('cart', [])
     products = ProductCRUD.get_product_list()
     customer = CustomerCRUD.get_customer(session.get('customer_id', []))
     return render_template('dashboard.html', cart=cart, products=products,
                            name=f"{customer.first_name} {customer.last_name}")
-
-
-@customer_blueprint.route('/get-remaining-quantities')
-def get_remaining_quantities():
-    products = ProductCRUD.get_product_list()
-    remaining_quantities = {product.id: product.remaining_quantity for product in products}
-
-    return jsonify(remaining_quantities=remaining_quantities)
 
 
 @customer_blueprint.route('/shopping-cart')
@@ -183,7 +176,7 @@ def delete_from_cart(product_id):
     return redirect(url_for('customer_blueprint.shopping_cart'))
 
 
-@customer_blueprint.route('/buy')
+@customer_blueprint.route('/buy', methods=['POST'])
 @redirect_unauthenticated_user
 def buy():
     cart = session.get('cart', [])

@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from helpers import generate_random_number, generate_random_fruit
+from helpers import generate_random_fruit, generate_random_number
 
 app = Flask(__name__)
 

@@ -1,5 +1,7 @@
-from flask import redirect, session, url_for
 from functools import wraps
+
+from flask import redirect, session, url_for
+
 from central_distributor.distributor.crud import ProductCRUD
 
 

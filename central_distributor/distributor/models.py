@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy import Column, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.hybrid import hybrid_property
+
 from central_distributor.database import Base
 
 

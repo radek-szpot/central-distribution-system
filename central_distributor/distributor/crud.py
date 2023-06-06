@@ -1,6 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
+
 from central_distributor.database import get_session
-from central_distributor.distributor.models import Product, Manufacturer
+from central_distributor.distributor.models import Manufacturer, Product
 
 
 class ManufacturerCRUD:
@@ -134,6 +135,20 @@ class ProductCRUD:
         finally:
             session.close()
         return products
+
+    @staticmethod
+    def get_available_product_ids(session=None):
+        if not session:
+            session = get_session()
+        try:
+            available_product_ids = []
+            products = session.query(Product).all()
+            for product in products:
+                if product.remaining_quantity > 0:
+                    available_product_ids.append(product.id)
+        finally:
+            session.close()
+        return available_product_ids
 
     @staticmethod
     def delete_product(product_id, session=None):

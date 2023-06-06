@@ -72,84 +72,69 @@
         .add-to-cart-button:hover {
             background-color: #1976D2;
         }
+
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            // Function to update the remaining quantities for all products
-            function updateRemainingQuantities() {
-                $.ajax({
-                    url: '/get-remaining-quantities',
-                    type: 'GET',
-                    success: function(response) {
-                        // Update the remaining quantity values on the page
-                        $.each(response.remaining_quantities, function(productId, remainingQuantity) {
-                            $('#remaining-quantity-' + productId).text(remainingQuantity);
-                        });
-                    },
-                    error: function() {
-                        console.log('Error occurred while updating remaining quantities.');
-                    }
-                });
+            // Function to periodically refresh the page
+            function autoRefreshPage() {
+                location.reload();
             }
 
-            // Function to periodically update the remaining quantity values
-            function autoRefreshRemainingQuantities() {
-                updateRemainingQuantities();
-            }
-
-            // Auto-refresh remaining quantities every 30 seconds (adjust as needed)
-            setInterval(autoRefreshRemainingQuantities, 30000);
+            // Auto-refresh the page every 15 seconds
+            setInterval(autoRefreshPage, 10000);
         });
+
     </script>
 </head>
 <body>
-    <h1>Dashboard</h1>
-    <p>Welcome to your dashboard {{ name }}!</p>
+<h1>Dashboard</h1>
+<p>Welcome to your dashboard {{ name }}!</p>
 
-    <div class="button-container">
-        <form action="/logout" method="POST" style="display: inline;">
-            <button type="submit">Logout</button>
-        </form>
-        <form action="/modify-account" method="GET" style="display: inline;">
-            <button type="submit">Modify Account</button>
-        </form>
-        <form action="/shopping-cart" method="GET" style="display: inline;">
-            <button type="submit">Shopping Cart</button>
-        </form>
-        <form action="/shopping-history" method="GET" style="display: inline;">
-            <button type="submit">Shopping History</button>
-        </form>
-    </div>
+<div class="button-container">
+    <form action="/logout" method="POST" style="display: inline;">
+        <button type="submit">Logout</button>
+    </form>
+    <form action="/modify-account" method="GET" style="display: inline;">
+        <button type="submit">Modify Account</button>
+    </form>
+    <form action="/shopping-cart" method="GET" style="display: inline;">
+        <button type="submit">Shopping Cart</button>
+    </form>
+    <form action="/shopping-history" method="GET" style="display: inline;">
+        <button type="submit">Shopping History</button>
+    </form>
+</div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Manufacturer</th>
-                <th>Quantity</th>
-                <th> </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in products %}
-                {% if product.remaining_quantity %}
-                <tr>
-                    <td>{{ product.type }}</td>
-                    <td>{{ product.singular_price }}</td>
-                    <td>{{ product.manufacturer_name }}</td>
-                    <td><span id="remaining-quantity-{{ product.id }}">{{ product.remaining_quantity }}</span></td>
-                    <td>
-                        <form action="/add-to-cart/{{ product.id }}" method="POST" style="display: inline;">
-                            <input type="number" name="user_quantity" value="1" min="1" max="{{ product.remaining_quantity }}">
-                            <button type="submit" class="add-to-cart-button">Add to Cart</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
+<table>
+    <thead>
+    <tr>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Manufacturer</th>
+        <th>Quantity</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for product in products %}
+    {% if product.remaining_quantity %}
+    <tr>
+        <td>{{ product.type }}</td>
+        <td>{{ product.singular_price }}</td>
+        <td>{{ product.manufacturer_name }}</td>
+        <td><span id="remaining-quantity-{{ product.id }}">{{ product.remaining_quantity }}</span></td>
+        <td>
+            <form action="/add-to-cart/{{ product.id }}" method="POST" style="display: inline;">
+                <input type="number" name="user_quantity" value="1" min="1" max="{{ product.remaining_quantity }}">
+                <button type="submit" class="add-to-cart-button">Add to Cart</button>
+            </form>
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
 </body>
 </html>

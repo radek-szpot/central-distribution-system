@@ -1,9 +1,10 @@
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from central_distributor.database import get_session
+from sqlalchemy import select, update
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+
 from central_distributor.customers.models import Customer, Purchase
 from central_distributor.customers.serializers import purchase_history_serializer
-from central_distributor.distributor.models import Product, Manufacturer
-from sqlalchemy import select, insert, update
+from central_distributor.database import get_session
+from central_distributor.distributor.models import Manufacturer, Product
 
 
 class CustomerCRUD:
@@ -12,11 +13,11 @@ class CustomerCRUD:
         if not session:
             session = get_session()
         try:
-            query = insert(Customer).values(email=email, password=password, first_name=first_name, last_name=last_name,
-                                            pan_number=pan_number if pan_number else None,
-                                            cid_number=cid_number if cid_number else None)
-            customer = session.execute(query)
+            customer = Customer(email=email, password=password, first_name=first_name, last_name=last_name,
+                                pan_number=pan_number, cid_number=cid_number)
+            session.add(customer)
             session.commit()
+            session.refresh(customer)
         except (SQLAlchemyError, IntegrityError):
             session.rollback()
             raise
