@@ -21,36 +21,66 @@
             font-size: 18px;
         }
 
-        .button-container {
-            margin-bottom: 10px;
+        .logout-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
 
-        .button-container form {
-            display: inline-block;
+        .back-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
         }
 
-        .button-container button, .button-container a {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-right: 10px;
-            background-color: #4CAF50;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
+        .logout-button,
+        .back-button {
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
-        }
-
-        .button-container button:hover, .button-container a:hover {
-            background-color: #45a049;
+            transition: background-color 0.3s ease;
         }
 
         .logout-button {
             background-color: #f44336;
+            color: #fff;
         }
 
         .logout-button:hover {
             background-color: #d32f2f;
+        }
+
+        .back-button {
+            position: relative;
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .back-button:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid #333;
+        }
+
+        .back-button:hover {
+            background-color: #999;
         }
 
         .buy-button {
@@ -59,15 +89,6 @@
 
         .buy-button:hover {
             background-color: #1976D2;
-        }
-
-        .back-button {
-            background-color: #ccc;
-            color: #333;
-        }
-
-        .back-button:hover {
-            background-color: #999;
         }
 
         .history-container {
@@ -117,15 +138,16 @@
     <h1>Shopping History</h1>
     <p>Below are listed all your transactions</p>
 
-    <div class="button-container">
-        <form action="/logout" method="POST" style="display: inline;">
+
+    <div class="logout-container">
+        <form action="/logout" method="POST">
             <button type="submit" class="logout-button">Logout</button>
         </form>
-        <form action="/dashboard" method="GET" style="display: inline;">
-            <button type="submit">Return to dashboard</button>
-        </form>
-        <form action="/shopping-cart" method="GET" style="display: inline;">
-            <button type="submit">Return to cart</button>
+    </div>
+
+    <div class="back-container">
+        <form action="/shopping-cart" method="GET">
+            <button type="submit" class="back-button">Shopping Cart</button>
         </form>
     </div>
 

@@ -38,10 +38,12 @@
 
         .button-container {
             margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
         }
 
         .button-container form {
-            display: inline-block;
+            margin-right: 10px;
         }
 
         .button-container button, .button-container a {
@@ -60,13 +62,68 @@
             background-color: #45a049;
         }
 
+        .logout-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .dashboard-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .logout-button,
+        .dashboard-button {
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
         .logout-button {
             background-color: #f44336;
+            color: #fff;
         }
 
         .logout-button:hover {
             background-color: #d32f2f;
         }
+
+        .dashboard-button {
+            position: relative;
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .dashboard-button:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid #333;
+        }
+
+        .dashboard-button:hover {
+            background-color: #999;
+        }
+
 
         .buy-button {
             background-color: #2196F3;
@@ -113,7 +170,7 @@
         }
 
         .popup-heading {
-        color: red;
+            color: red;
         }
     </style>
 </head>
@@ -121,17 +178,23 @@
     <h1>Shopping Cart</h1>
     <p>Your shopping cart is worth: {{ whole_price }}</p>
 
-    <div class="button-container">
-        <form action="/logout" method="POST" style="display: inline;">
+    <div class="logout-container">
+        <form action="/logout" method="POST">
             <button type="submit" class="logout-button">Logout</button>
         </form>
-        <form action="/buy" method="POST" style="display: inline;">
+    </div>
+
+    <div class="dashboard-container">
+        <form action="/dashboard" method="GET">
+            <button type="submit" class="dashboard-button">Dashboard</button>
+        </form>
+    </div>
+
+    <div class="button-container">
+        <form action="/buy" method="POST">
             <button type="submit">Buy items in cart</button>
         </form>
-        <form action="/dashboard" method="GET" style="display: inline;">
-            <button type="submit">Return to dashboard</button>
-        </form>
-        <form action="/shopping-history" method="GET" style="display: inline;">
+        <form action="/shopping-history" method="GET">
             <button type="submit">Shopping History</button>
         </form>
     </div>
@@ -158,7 +221,7 @@
                             <td>{{ product.user_quantity }}</td>
                             <td>{{ product.price }}</td>
                             <td>
-                                <form action="/delete-from-cart/{{ product.id }}" method="POST" style="display: inline;">
+                                <form action="/delete-from-cart/{{ product.id }}" method="POST">
                                     <button type="submit" class="delete-button">Delete</button>
                                 </form>
                             </td>
@@ -177,7 +240,7 @@
             <h3 class="popup-heading">Attention!</h3>
             <p>{{ details_popup }}</p>
             {% if cc_missing %}
-            <form action="/modify-account" method="GET" style="display: inline;">
+            <form action="/modify-account" method="GET">
                 <button type="submit">Modify Account</button>
             </form>
             {% endif %}

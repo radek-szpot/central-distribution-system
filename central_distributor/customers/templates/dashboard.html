@@ -22,13 +22,16 @@
 
         .button-container {
             margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
         }
 
         .button-container form {
-            display: inline-block;
+            margin-right: 10px;
         }
 
-        .button-container button, .button-container a {
+        .button-container button,
+        .button-container a {
             display: inline-block;
             padding: 10px 20px;
             margin-right: 10px;
@@ -40,8 +43,34 @@
             cursor: pointer;
         }
 
-        .button-container button:hover, .button-container a:hover {
+        .button-container button:hover,
+        .button-container a:hover {
             background-color: #45a049;
+        }
+
+        .logout-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .logout-button {
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-button {
+            background-color: #f44336;
+            color: #fff;
+        }
+
+        .logout-button:hover {
+            background-color: #d32f2f;
         }
 
         table {
@@ -50,7 +79,8 @@
             border-collapse: collapse;
         }
 
-        th, td {
+        th,
+        td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
@@ -73,6 +103,11 @@
             background-color: #1976D2;
         }
 
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+        }
+
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
@@ -92,10 +127,12 @@
 <h1>Dashboard</h1>
 <p>Welcome to your dashboard {{ name }}!</p>
 
-<div class="button-container">
-    <form action="/logout" method="POST" style="display: inline;">
-        <button type="submit">Logout</button>
+<div class="logout-container">
+    <form action="/logout" method="POST">
+        <button type="submit" class="logout-button">Logout</button>
     </form>
+</div>
+<div class="button-container">
     <form action="/modify-account" method="GET" style="display: inline;">
         <button type="submit">Modify Account</button>
     </form>
@@ -124,10 +161,13 @@
         <td>{{ product.type }}</td>
         <td>{{ product.singular_price }}</td>
         <td>{{ product.manufacturer_name }}</td>
-        <td><span id="remaining-quantity-{{ product.id }}">{{ product.remaining_quantity }}</span></td>
+        <td>
+            <span id="remaining-quantity-{{ product.id }}">{{ product.remaining_quantity }}</span>
+        </td>
         <td>
             <form action="/add-to-cart/{{ product.id }}" method="POST" style="display: inline;">
-                <input type="number" name="user_quantity" value="1" min="1" max="{{ product.remaining_quantity }}">
+                <input type="number" name="user_quantity" value="1" min="1" max="{{ product.remaining_quantity }}"
+                       class="quantity-input">
                 <button type="submit" class="add-to-cart-button">Add to Cart</button>
             </form>
         </td>
