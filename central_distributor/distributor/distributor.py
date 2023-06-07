@@ -3,6 +3,12 @@ import requests
 from central_distributor.distributor.crud import ManufacturerCRUD, ProductCRUD
 
 
+def send_manufacturer_sold_product(manufacturer_url):
+    response = requests.post(f"{manufacturer_url}/sold_product")
+    if response.status_code != 200:
+        print(f"Communication error with manufacturer {manufacturer_url}")
+
+
 def fetch_products_information(manufacturer_list):
     products_information = []
 

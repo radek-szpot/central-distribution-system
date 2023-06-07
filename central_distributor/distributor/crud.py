@@ -33,6 +33,17 @@ class ManufacturerCRUD:
         return manufacturer
 
     @staticmethod
+    def get_by_name(manufacturer_name, session=None):
+        if not session:
+            session = get_session()
+
+        try:
+            manufacturer = session.query(Manufacturer).filter_by(name=manufacturer_name).first()
+        finally:
+            session.close()
+        return manufacturer
+
+    @staticmethod
     def list_urls(session=None):
         if not session:
             session = get_session()

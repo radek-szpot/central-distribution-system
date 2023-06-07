@@ -14,5 +14,10 @@ def get_all_products():
     return jsonify(goods_info)
 
 
+@app.route("/sold_product", methods=["POST"])
+def sold_product():
+    return jsonify({})
+
+
 if __name__ == "__main__":
     app.run(port=5001)

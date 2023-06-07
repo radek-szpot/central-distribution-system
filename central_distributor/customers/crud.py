@@ -2,7 +2,8 @@ from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from central_distributor.customers.models import Customer, Purchase
-from central_distributor.customers.serializers import purchase_history_serializer
+from central_distributor.customers.serializers import \
+    purchase_history_serializer
 from central_distributor.database import get_session
 from central_distributor.distributor.models import Manufacturer, Product
 

@@ -1,8 +1,8 @@
 import hashlib
 from copy import deepcopy
 
-from flask import (Blueprint, redirect, render_template, request,
-                   session, url_for)
+from flask import (Blueprint, redirect, render_template, request, session,
+                   url_for)
 from markupsafe import Markup
 from sqlalchemy.exc import IntegrityError, StatementError
 
@@ -13,8 +13,8 @@ from central_distributor.customers.validators import (
     redirect_unauthenticated_user)
 from central_distributor.database import get_session
 from central_distributor.distributor.crud import ManufacturerCRUD, ProductCRUD
-from central_distributor.distributor.distributor import \
-    sum_quantities_of_duplicates
+from central_distributor.distributor.distributor import (
+    send_manufacturer_sold_product, sum_quantities_of_duplicates)
 
 customer_blueprint = Blueprint("customer_blueprint", __name__, template_folder='templates')
 received_hashes = {}
@@ -206,6 +206,8 @@ def buy():
                 else:
                     PurchaseCRUD.create(customer_id, item["id"], item["user_quantity"], db_session)
                 ProductCRUD.update_quantity(item["id"], item["user_quantity"], db_session)
+                url = ManufacturerCRUD.get_by_name(item['manufacturer_name']).url
+                send_manufacturer_sold_product(url)
             else:
                 return shopping_cart()
         session['cart'] = []
