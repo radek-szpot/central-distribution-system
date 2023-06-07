@@ -23,7 +23,7 @@ def fetch_products_information(manufacturer_list):
 
 
 def update_available_products():
-    manufacturer_list = ManufacturerCRUD.get_manufacturer_list()
+    manufacturer_list = ManufacturerCRUD.list()
     products = fetch_products_information(manufacturer_list)
 
     for product_info in products:
@@ -33,7 +33,7 @@ def update_available_products():
         singular_price = product_info.get("singular_price")
 
         if product_type and quantity and singular_price is not None:
-            ProductCRUD.create_or_update_product(manufacturer_id, product_type, quantity, singular_price)
+            ProductCRUD.create_or_update(manufacturer_id, product_type, quantity, singular_price)
         else:
             print("Invalid product information received")
 
@@ -55,12 +55,3 @@ def sum_quantities_of_duplicates(items):
             items_with_summed_quantity.append(item)
 
     return items_with_summed_quantity
-
-
-def handle_customer_request(customer_request):
-    # TODO: Handle customer requests and process the purchase
-    # TODO: Update the database and notify manufacturers
-    # TODO: Process the customer request
-    # TODO: Update the database with the purchased goods
-    # TODO: Notify manufacturers about the quantity of goods sold
-    pass

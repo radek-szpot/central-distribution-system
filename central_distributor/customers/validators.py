@@ -27,7 +27,7 @@ def is_customer_input_valid(customer_dict):
 
 def items_still_available(product_id, quantity, product=None):
     if not product:
-        product = ProductCRUD.get_product(product_id)
+        product = ProductCRUD.get(product_id)
     if product and product.remaining_quantity >= quantity:
         return True
     return False

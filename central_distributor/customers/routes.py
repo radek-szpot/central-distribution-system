@@ -33,7 +33,7 @@ def signup():
         if error_message:
             return render_template('signup.html', error_message=error_message)
         try:
-            customer = CustomerCRUD.create_customer(**request_dict)
+            customer = CustomerCRUD.create(**request_dict)
         except IntegrityError:
             error_message = 'Email is already in use!'
             return render_template('signup.html', error_message=error_message)
@@ -53,7 +53,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
-        customer = CustomerCRUD.get_customer_by_credentials(email, password)
+        customer = CustomerCRUD.get_by_credentials(email, password)
         if customer:
             session['logged_in'] = True
             session['customer_id'] = customer.id
@@ -80,7 +80,7 @@ def modify_account():
         data = {key: value for key, value in request.form.to_dict().items() if value.strip()}
         if not data:
             return render_template('modify_account.html')
-        CustomerCRUD.update_customer(session['customer_id'], **data)
+        CustomerCRUD.update(session['customer_id'], **data)
         return redirect('/dashboard')
     return render_template('modify_account.html')
 
@@ -90,7 +90,7 @@ def modify_account():
 def delete_account():
     """Delete the customer's account details"""
     if request.method == 'POST':
-        CustomerCRUD.delete_customer(session['customer_id'])
+        CustomerCRUD.delete(session['customer_id'])
         return redirect('/')
     return render_template('modify_account.html')
 
@@ -102,8 +102,8 @@ def delete_account():
 def dashboard():
     """Display the customer's dashboard"""
     cart = session.get('cart', [])
-    products = ProductCRUD.get_product_list()
-    customer = CustomerCRUD.get_customer(session.get('customer_id', []))
+    products = ProductCRUD.list()
+    customer = CustomerCRUD.get(session.get('customer_id', []))
     return render_template('dashboard.html', cart=cart, products=products,
                            name=f"{customer.first_name} {customer.last_name}")
 
@@ -143,7 +143,7 @@ def shopping_cart(cc_missing=False, details_popup=""):
 @redirect_unauthenticated_user
 def shopping_history():
     """Display the customer's shopping history"""
-    purchases_history = PurchaseCRUD.get_purchase_history(session.get('customer_id', []))
+    purchases_history = PurchaseCRUD.get_history(session.get('customer_id', []))
     return render_template('shopping_history.html', history=purchases_history)
 
 
@@ -151,11 +151,11 @@ def shopping_history():
 @redirect_unauthenticated_user
 def add_to_cart(product_id):
     user_quantity = int(request.form.get('user_quantity', 1))
-    product = ProductCRUD.get_product(product_id)
+    product = ProductCRUD.get(product_id)
     items_in_db = items_still_available(product_id, user_quantity, product)
     if not items_in_db:
         return shopping_cart(details_popup="Chosen items are not available anymore.")
-    product.manufacturer_name = ManufacturerCRUD.get_manufacturer(product.manufacturer_id).name
+    product.manufacturer_name = ManufacturerCRUD.get(product.manufacturer_id).name
     product_dict = product_serializer(product)
     product_dict['user_quantity'] = user_quantity
 
@@ -181,7 +181,7 @@ def delete_from_cart(product_id):
 def buy():
     cart = session.get('cart', [])
     customer_id = session.get('customer_id')
-    customer = CustomerCRUD.get_customer(customer_id)
+    customer = CustomerCRUD.get(customer_id)
     if not cart:
         return redirect('/dashboard')
     if not (customer.pan_number and customer.cid_number):
@@ -198,14 +198,14 @@ def buy():
 
     try:
         for item in cart:
-            product = ProductCRUD.get_product(item["id"], db_session)
+            product = ProductCRUD.get(item["id"], db_session)
             if product and product.remaining_quantity >= item["user_quantity"]:
-                purchase = PurchaseCRUD.get_purchase_all_filters(customer_id, item["id"], "Paid", db_session)
+                purchase = PurchaseCRUD.get_all_fields(customer_id, item["id"], "Paid", db_session)
                 if purchase:
-                    PurchaseCRUD.update_purchase(purchase.id, item["user_quantity"], db_session)
+                    PurchaseCRUD.update(purchase.id, item["user_quantity"], db_session)
                 else:
-                    PurchaseCRUD.create_purchase(customer_id, item["id"], item["user_quantity"], db_session)
-                ProductCRUD.update_product_quantity(item["id"], item["user_quantity"], db_session)
+                    PurchaseCRUD.create(customer_id, item["id"], item["user_quantity"], db_session)
+                ProductCRUD.update_quantity(item["id"], item["user_quantity"], db_session)
             else:
                 return shopping_cart()
         session['cart'] = []

@@ -6,7 +6,7 @@ from central_distributor.distributor.models import Manufacturer, Product
 
 class ManufacturerCRUD:
     @staticmethod
-    def create_manufacturer(url, name, session=None):
+    def create(url, name, session=None):
         if not session:
             session = get_session()
 
@@ -22,7 +22,7 @@ class ManufacturerCRUD:
         return manufacturer
 
     @staticmethod
-    def get_manufacturer(manufacturer_id, session=None):
+    def get(manufacturer_id, session=None):
         if not session:
             session = get_session()
 
@@ -33,7 +33,7 @@ class ManufacturerCRUD:
         return manufacturer
 
     @staticmethod
-    def get_manufacturer_urls(session=None):
+    def list_urls(session=None):
         if not session:
             session = get_session()
 
@@ -46,7 +46,7 @@ class ManufacturerCRUD:
         return manufacturer_urls
 
     @staticmethod
-    def get_manufacturer_list(session=None):
+    def list(session=None):
         if not session:
             session = get_session()
 
@@ -57,7 +57,7 @@ class ManufacturerCRUD:
         return manufacturers
 
     @staticmethod
-    def delete_manufacturer(manufacturer_id, session=None):
+    def delete(manufacturer_id, session=None):
         if not session:
             session = get_session()
 
@@ -75,7 +75,7 @@ class ManufacturerCRUD:
 
 class ProductCRUD:
     @staticmethod
-    def create_product(manufacturer_id, product_type, quantity, price, session=None):
+    def create(manufacturer_id, product_type, quantity, price, session=None):
         if not session:
             session = get_session()
         try:
@@ -91,7 +91,7 @@ class ProductCRUD:
         return product
 
     @staticmethod
-    def create_or_update_product(manufacturer_id, product_type, quantity, price, session=None):
+    def create_or_update(manufacturer_id, product_type, quantity, price, session=None):
         if not session:
             session = get_session()
         try:
@@ -114,7 +114,7 @@ class ProductCRUD:
         return product
 
     @staticmethod
-    def get_product(product_id, session=None):
+    def get(product_id, session=None):
         if not session:
             session = get_session()
 
@@ -125,7 +125,7 @@ class ProductCRUD:
         return product
 
     @staticmethod
-    def get_product_list(session=None):
+    def list(session=None):
         if not session:
             session = get_session()
         try:
@@ -137,7 +137,7 @@ class ProductCRUD:
         return products
 
     @staticmethod
-    def get_available_product_ids(session=None):
+    def list_available_ids(session=None):
         if not session:
             session = get_session()
         try:
@@ -151,7 +151,7 @@ class ProductCRUD:
         return available_product_ids
 
     @staticmethod
-    def delete_product(product_id, session=None):
+    def delete(product_id, session=None):
         if not session:
             session = get_session()
 
@@ -167,7 +167,7 @@ class ProductCRUD:
             session.close()
 
     @staticmethod
-    def update_product_quantity(product_id, bought_quantity, session=None):
+    def update_quantity(product_id, bought_quantity, session=None):
         if not session:
             session = get_session()
 

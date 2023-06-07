@@ -23,14 +23,14 @@ app.register_blueprint(customer_blueprint)
 
 def add_test_setup(urls):
     for i, url in enumerate(urls):
-        ManufacturerCRUD.create_manufacturer(url, f"Manufacturer {chr(i + 65)}")
-    if not ProductCRUD.get_product_list():
-        ProductCRUD.create_product("1", "apple", 100, 3)
-        ProductCRUD.create_product("1", "pear", 100, 5)
-        ProductCRUD.create_product("2", "banana", 100, 7)
-        ProductCRUD.create_product("3", "apple", 50, 4)
-    if not CustomerCRUD.get_customer_list():
-        CustomerCRUD.create_customer("abc@example.com", "a", "Radek", "Szpot")
+        ManufacturerCRUD.create(url, f"Manufacturer {chr(i + 65)}")
+    if not ProductCRUD.list():
+        ProductCRUD.create("1", "apple", 100, 3)
+        ProductCRUD.create("1", "pear", 100, 5)
+        ProductCRUD.create("2", "banana", 100, 7)
+        ProductCRUD.create("3", "apple", 50, 4)
+    if not CustomerCRUD.list():
+        CustomerCRUD.create("abc@example.com", "a", "Radek", "Szpot")
 
 
 @app.before_request

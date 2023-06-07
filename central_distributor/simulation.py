@@ -21,7 +21,7 @@ def set_fake_customers(number_of_customers):
             pan = "1" * 16
             cid = "1" * 3
 
-            customer = CustomerCRUD.create_customer(email, password, first_name, last_name, pan, cid)
+            customer = CustomerCRUD.create(email, password, first_name, last_name, pan, cid)
             customer_ids.append((customer.id, email, password))
         except (SQLAlchemyError, IntegrityError) as e:
             customer_ids.append((i + 2, f"test_{i + 1}@example.com", f"test_{i + 1}"))
@@ -37,7 +37,7 @@ def login_and_get_session(client, email, password):
 
 
 def add_to_cart_and_get_session(client, session):
-    product_ids = ProductCRUD.get_available_product_ids()
+    product_ids = ProductCRUD.list_available_ids()
     if not product_ids:
         return
     product_id = choice(product_ids)

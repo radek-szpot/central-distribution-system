@@ -9,7 +9,7 @@ from central_distributor.distributor.models import Manufacturer, Product
 
 class CustomerCRUD:
     @staticmethod
-    def create_customer(email, password, first_name, last_name, pan_number=None, cid_number=None, session=None):
+    def create(email, password, first_name, last_name, pan_number=None, cid_number=None, session=None):
         if not session:
             session = get_session()
         try:
@@ -26,7 +26,7 @@ class CustomerCRUD:
         return customer
 
     @staticmethod
-    def get_customer(customer_id, session=None):
+    def get(customer_id, session=None):
         if not session:
             session = get_session()
 
@@ -38,7 +38,7 @@ class CustomerCRUD:
         return customer[0] if customer else None
 
     @staticmethod
-    def get_customer_by_credentials(email, password, session=None):
+    def get_by_credentials(email, password, session=None):
         if not session:
             session = get_session()
         try:
@@ -49,7 +49,7 @@ class CustomerCRUD:
         return customer[0] if customer else None
 
     @staticmethod
-    def get_customer_list(session=None):
+    def list(session=None):
         if not session:
             session = get_session()
         try:
@@ -59,7 +59,7 @@ class CustomerCRUD:
         return customers
 
     @staticmethod
-    def update_customer(customer_id, session=None, **kwargs):
+    def update(customer_id, session=None, **kwargs):
         if not session:
             session = get_session()
         try:
@@ -73,7 +73,7 @@ class CustomerCRUD:
             session.close()
 
     @staticmethod
-    def delete_customer(customer_id, session=None):
+    def delete(customer_id, session=None):
         if not session:
             session = get_session()
         try:
@@ -90,7 +90,7 @@ class CustomerCRUD:
 
 class PurchaseCRUD:
     @staticmethod
-    def create_purchase(customer_id: int, product_id: int, quantity: int, session=None):
+    def create(customer_id: int, product_id: int, quantity: int, session=None):
         if not session:
             session = get_session()
 
@@ -101,14 +101,14 @@ class PurchaseCRUD:
         return purchase
 
     @staticmethod
-    def get_purchase(purchase_id: int, session=None):
+    def get(purchase_id: int, session=None):
         if not session:
             session = get_session()
 
         return session.query(Purchase).filter(Purchase.id == purchase_id).first()
 
     @staticmethod
-    def get_purchase_history(customer_id: int, session=None):
+    def get_history(customer_id: int, session=None):
         if not session:
             session = get_session()
 
@@ -126,7 +126,7 @@ class PurchaseCRUD:
         return [purchase_history_serializer(purchase) for purchase in purchases]
 
     @staticmethod
-    def get_purchase_all_filters(customer_id: int, product_id: int, status: str, session=None):
+    def get_all_fields(customer_id: int, product_id: int, status: str, session=None):
         if not session:
             session = get_session()
 
@@ -137,7 +137,7 @@ class PurchaseCRUD:
         ).first()
 
     @staticmethod
-    def get_purchases():
+    def list():
         session = get_session()
         try:
             purchase = session.query(Purchase).all()
@@ -146,11 +146,11 @@ class PurchaseCRUD:
         return purchase
 
     @staticmethod
-    def update_purchase(purchase_id: int, quantity: int = None, session=None):
+    def update(purchase_id: int, quantity: int = None, session=None):
         if not session:
             session = get_session()
 
-        purchase = PurchaseCRUD.get_purchase(purchase_id, session)
+        purchase = PurchaseCRUD.get(purchase_id, session)
         if purchase:
             if quantity is not None:
                 purchase.quantity += quantity
@@ -163,7 +163,7 @@ class PurchaseCRUD:
         if not session:
             session = get_session()
 
-        purchase = PurchaseCRUD.get_purchase(purchase_id, session)
+        purchase = PurchaseCRUD.get(purchase_id, session)
         if purchase:
             session.delete(purchase)
             session.commit()
