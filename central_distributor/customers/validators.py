@@ -22,6 +22,8 @@ def is_customer_input_valid(customer_dict):
         error_message = 'PAN number must be combination of 16 numbers!'
     if customer_dict["cid_number"] and len(customer_dict["cid_number"]) != 3:
         error_message = 'CID number must be combination of 3 numbers!'
+    if customer_dict["password"] and len(customer_dict["password"]) < 4:
+        error_message = 'Password must be longer than 4 characters!'
     return error_message
 
 

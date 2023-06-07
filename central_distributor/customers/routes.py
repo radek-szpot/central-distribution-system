@@ -39,8 +39,7 @@ def signup():
         except IntegrityError:
             error_message = 'Email is already in use!'
             return render_template('signup.html', error_message=error_message)
-        except StatementError as e:
-            print(e)
+        except StatementError:
             error_message = 'PAN and CID numbers must be digits!'
             return render_template('signup.html', error_message=error_message)
         if customer:
