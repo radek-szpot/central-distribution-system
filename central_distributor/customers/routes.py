@@ -29,6 +29,8 @@ def home():
 def signup():
     if request.method == 'POST':
         request_dict = request.form.to_dict()
+        request_dict["pan_number"] = request_dict.get("pan_number") or None
+        request_dict["cid_number"] = request_dict.get("cid_number") or None
         error_message = is_customer_input_valid(request_dict)
         if error_message:
             return render_template('signup.html', error_message=error_message)
@@ -37,7 +39,8 @@ def signup():
         except IntegrityError:
             error_message = 'Email is already in use!'
             return render_template('signup.html', error_message=error_message)
-        except StatementError:
+        except StatementError as e:
+            print(e)
             error_message = 'PAN and CID numbers must be digits!'
             return render_template('signup.html', error_message=error_message)
         if customer:

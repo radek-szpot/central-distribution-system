@@ -17,7 +17,7 @@ def redirect_unauthenticated_user(endpoint):
 
 
 def is_customer_input_valid(customer_dict):
-    error_message = False
+    error_message = None
     if customer_dict["pan_number"] and len(customer_dict["pan_number"]) != 16:
         error_message = 'PAN number must be combination of 16 numbers!'
     if customer_dict["cid_number"] and len(customer_dict["cid_number"]) != 3:

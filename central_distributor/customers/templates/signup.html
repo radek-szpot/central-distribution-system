@@ -67,6 +67,18 @@
             color: red;
             margin-top: 10px;
         }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -105,9 +117,16 @@
             <input id="cid_number" name="cid_number" type="text" />
         </div>
 
-        {% if error_message %}
-            <p class="error-message">{{ error_message }}</p>
-        {% endif %}
+    <div class="form-group">
+        <label class="terms-checkbox">
+            <input type="checkbox" required="">
+            I accept the terms and conditions
+        </label>
+    </div>
+
+    {% if error_message %}
+        <p class="error-message">{{ error_message }}</p>
+    {% endif %}
 
         <input type="submit" value="Sign Up" />
     </form>
