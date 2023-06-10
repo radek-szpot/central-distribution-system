@@ -145,7 +145,7 @@ def shopping_cart(cc_missing=False, details_popup=""):
 @redirect_unauthenticated_user
 def shopping_history():
     """Display the customer's shopping history"""
-    purchases_history = PurchaseCRUD.get_history(session.get('customer_id', []))
+    purchases_history = PurchaseCRUD.get_by_customer(session.get('customer_id', []))
     return render_template('shopping_history.html', history=purchases_history)
 
 

@@ -1,4 +1,3 @@
-import logging
 import os
 from datetime import datetime
 
@@ -30,7 +29,8 @@ def add_test_setup(urls):
         ProductCRUD.create("2", "banana", 100, 7)
         ProductCRUD.create("3", "apple", 50, 4)
     if not CustomerCRUD.list():
-        CustomerCRUD.create("abc@example.com", "a", "Radek", "Szpot")
+        CustomerCRUD.create("rszpot@example.com", "a", "Radosław", "Szpot")
+        CustomerCRUD.create("bzak@example.com", "a", "Bartosz", "Żak")
 
 
 @app.before_request
@@ -43,8 +43,8 @@ def log_request_info():
     app.logger.info(f"{remote_addr} - - [{timestamp}] \"{method} {path} {http_version}\"")
 
 
-def site_movement(manufacturer_interval, fake_client, app_, fake_simulation=False):
-    run_scheduler(manufacturer_interval, fake_client, app_, fake_simulation)
+def site_movement(fake_client, app_, manufacturer_interval=604800, fake_simulation=False):
+    run_scheduler(fake_client, app_, manufacturer_interval, fake_simulation)
 
 
 if __name__ == "__main__":
@@ -52,5 +52,5 @@ if __name__ == "__main__":
         create_database()
         add_test_setup(manufacturer_urls)
     client = app.test_client()
-    site_movement(604800, client, app, fake_simulation=False)
+    site_movement(client, app, manufacturer_interval=604800, fake_simulation=False)
     app.run(port=5000)

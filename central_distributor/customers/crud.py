@@ -109,7 +109,7 @@ class PurchaseCRUD:
         return session.query(Purchase).filter(Purchase.id == purchase_id).first()
 
     @staticmethod
-    def get_history(customer_id: int, session=None):
+    def get_by_customer(customer_id: int, session=None):
         if not session:
             session = get_session()
 
@@ -138,23 +138,28 @@ class PurchaseCRUD:
         ).first()
 
     @staticmethod
-    def list():
+    def list(status=None):
         session = get_session()
         try:
-            purchase = session.query(Purchase).all()
+            query = session.query(Purchase)
+            if status:
+                query = query.filter(Purchase.status.in_(status))
+            purchases = query.all()
         finally:
             session.close()
-        return purchase
+        return purchases
 
     @staticmethod
-    def update(purchase_id: int, quantity: int = None, session=None):
+    def update(purchase_id: int, quantity: int = None, status: str = None, session=None):
         if not session:
             session = get_session()
 
         purchase = PurchaseCRUD.get(purchase_id, session)
         if purchase:
-            if quantity is not None:
+            if quantity:
                 purchase.quantity += quantity
+            if status:
+                purchase.status = status
             session.commit()
             session.refresh(purchase)
         return purchase

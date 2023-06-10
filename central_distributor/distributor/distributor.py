@@ -1,5 +1,6 @@
 import requests
 
+from central_distributor.customers.crud import PurchaseCRUD
 from central_distributor.distributor.crud import ManufacturerCRUD, ProductCRUD
 
 
@@ -42,6 +43,15 @@ def update_available_products():
             ProductCRUD.create_or_update(manufacturer_id, product_type, quantity, singular_price)
         else:
             print("Invalid product information received")
+
+
+def update_products_status():
+    purchases = PurchaseCRUD.list(["Paid"])
+    for purchase in purchases:
+        product = ProductCRUD.get(purchase.product_id)
+        manufacturer = ManufacturerCRUD.get(product.manufacturer_id)
+        send_manufacturer_sold_product(manufacturer.url)
+        PurchaseCRUD.update(purchase.id, status="Passed to realisation")
 
 
 def sum_quantities_of_duplicates(items):

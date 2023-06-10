@@ -6,7 +6,8 @@ from random import choice, randint
 from apscheduler.schedulers.background import BackgroundScheduler
 from customers.crud import CustomerCRUD
 from distributor.crud import ProductCRUD
-from distributor.distributor import update_available_products
+from distributor.distributor import (update_available_products,
+                                     update_products_status)
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 
@@ -66,16 +67,17 @@ def customer_buy_simulated_cart(client, email, password):
     buy_and_get_session(client, session)
 
 
-def run_scheduler(interval_in_seconds, client, app, simulation=False, number_of_fake_customers=2):
+def run_scheduler(client, app, interval_in_seconds, simulation, number_of_fake_customers=5):
     customer_tuples = set_fake_customers(number_of_fake_customers)
     scheduler = BackgroundScheduler(daemon=True)
     scheduler.add_job(update_available_products, 'interval', seconds=interval_in_seconds)
+    scheduler.add_job(update_products_status, 'interval', seconds=interval_in_seconds / 7)
     if simulation:
         app.logger.setLevel(logging.INFO)
 
         for customer_tuple in customer_tuples:
             customer_id, email, password = customer_tuple
-            scheduler.add_job(customer_buy_simulated_cart, 'interval', seconds=10,
+            scheduler.add_job(customer_buy_simulated_cart, 'interval', seconds=15,
                               args=[client, email, password])
             time.sleep(5)
         print("!! SIMULATION WILL START !!")

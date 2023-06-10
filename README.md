@@ -1,5 +1,5 @@
 # central-distribution-system
-## Project for distribution system lecture
+## Project for distributed systems lecture 
 
 ### System description:
 * Each product manufacturer provides an interface indicating the quantity of goods they can supply.
@@ -10,6 +10,9 @@ The goal of the described system is to enable the distribution of goods from man
 
 ### System scope:   
 The system scope also includes parallel production of goods by manufacturers and the ability of the Distribution Center to serve multiple customers simultaneously. The system gathers information on the availability of goods from manufacturers and stores it in the Distribution Center. The system aims to effectively serve customers by selling them goods based on accurate information about the current stock status.
+
+### Configuration
+To run system simulation download project and run command in terminal `python run.py`
 
 # Problems and adjustments:
 - ~~What if customer adds products to cart or try to buy product and in the meantime they won't be available anymore?~~   
