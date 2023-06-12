@@ -29,8 +29,8 @@ def add_test_setup(urls):
         ProductCRUD.create("2", "banana", 100, 7)
         ProductCRUD.create("3", "apple", 50, 4)
     if not CustomerCRUD.list():
-        CustomerCRUD.create("rszpot@example.com", "a", "Radosław", "Szpot")
-        CustomerCRUD.create("bzak@example.com", "a", "Bartosz", "Żak")
+        CustomerCRUD.create("rszpot@student.agh.edu.pl", "a", "Radosław", "Szpot")
+        CustomerCRUD.create("bzak@student.agh.edu.pl", "a", "Bartosz", "Żak")
 
 
 @app.before_request

@@ -67,7 +67,7 @@ def customer_buy_simulated_cart(client, email, password):
     buy_and_get_session(client, session)
 
 
-def run_scheduler(client, app, interval_in_seconds, simulation, number_of_fake_customers=5):
+def run_scheduler(client, app, interval_in_seconds, simulation, number_of_fake_customers=3):
     customer_tuples = set_fake_customers(number_of_fake_customers)
     scheduler = BackgroundScheduler(daemon=True)
     scheduler.add_job(update_available_products, 'interval', seconds=interval_in_seconds)

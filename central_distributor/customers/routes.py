@@ -80,9 +80,24 @@ def modify_account():
     """Modify the customer's account details"""
     if request.method == 'POST':
         data = {key: value for key, value in request.form.to_dict().items() if value.strip()}
-        if not data:
+        request_dict = request.form.to_dict()
+        if not request_dict:
             return render_template('modify_account.html')
-        CustomerCRUD.update(session['customer_id'], **data)
+        request_dict = request.form.to_dict()
+        request_dict["pan_number"] = request_dict.get("pan_number") or None
+        request_dict["cid_number"] = request_dict.get("cid_number") or None
+        error_message = is_customer_input_valid(request_dict)
+        if error_message:
+            return render_template('modify_account.html', error_message=error_message)
+        try:
+            CustomerCRUD.update(session['customer_id'], **data)
+        except IntegrityError:
+            error_message = 'Email is already in use!'
+            return render_template('modify_account.html', error_message=error_message)
+        except StatementError:
+            error_message = 'PAN and CID numbers must be digits!'
+            return render_template('modify_account.html', error_message=error_message)
+
         return redirect('/dashboard')
     return render_template('modify_account.html')
 
