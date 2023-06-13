@@ -10,7 +10,7 @@ apps = [
 processes = []
 
 for app in apps:
-    process = Popen(['python', app])
+    process = Popen(['venv\\Scripts\\python.exe', app])
     processes.append(process)
 
 for process in processes:
